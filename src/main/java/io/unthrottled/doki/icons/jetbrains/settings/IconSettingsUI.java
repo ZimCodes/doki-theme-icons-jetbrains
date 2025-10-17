@@ -139,7 +139,8 @@ public class IconSettingsUI implements SearchableConfigurable, Configurable.NoSc
       .getMessageBus()
       .syncPublisher(IconConfigListener.getTOPIC())
       .iconConfigUpdated(initialIconSettingsModel, iconSettingsModel);
-    initialIconSettingsModel = iconSettingsModel;
+    // Reset the initial model to a fresh snapshot so future changes are detected by isModified()
+    initialIconSettingsModel = IconSettings.createSettingsModule();
   }
 
   private void createUIComponents() {

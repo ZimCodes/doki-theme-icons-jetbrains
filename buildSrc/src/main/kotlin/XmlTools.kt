@@ -1,6 +1,6 @@
 import groovy.util.Node
-import groovy.util.XmlNodePrinter
-import groovy.util.XmlParser
+import groovy.xml.XmlNodePrinter
+import groovy.xml.XmlParser
 import org.xml.sax.ErrorHandler
 import org.xml.sax.InputSource
 import org.xml.sax.SAXParseException
@@ -25,7 +25,7 @@ fun writeXmlToFile(pluginXml: Path, parsedPluginXml: Node) {
 
 fun parseXml(pluginXml: Path): Node {
   val parsedPlugin = Files.newInputStream(pluginXml).use { input ->
-    val inputSource = InputSource(InputStreamReader(input, "UTF-8"))
+    val inputSource = InputSource(InputStreamReader(input, StandardCharsets.UTF_8))
     val parser = XmlParser(false, true, true)
     parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
     parser.errorHandler = object : ErrorHandler {

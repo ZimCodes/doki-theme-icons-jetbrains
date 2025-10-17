@@ -97,10 +97,24 @@ object IconPathReplacementComponent : IconConfigListener {
 
   private fun refresh() {
     ExperimentalUIFixer.fixExperimentalUI()
-    ApplicationManager.getApplication().invokeLater {
-      val app = ApplicationManager.getApplication()
-      app.runWriteAction { FileTypeManagerEx.getInstanceEx().fireFileTypesChanged() }
-      app.runWriteAction { updateToolbars() }
-    }
+    val app = ApplicationManager.getApplication()
+    app.invokeLater(
+      {
+        if (app.isDisposed) return@invokeLater
+        try {
+          app.runWriteAction {
+            FileTypeManagerEx.getInstanceEx().fireFileTypesChanged()
+          }
+        } catch (t: Throwable) {
+          // no-op: avoid interfering with modal dialogs
+        }
+        try {
+          app.runWriteAction { updateToolbars() }
+        } catch (t: Throwable) {
+          // no-op: avoid interfering with modal dialogs
+        }
+      },
+      com.intellij.openapi.application.ModalityState.nonModal(),
+    )
   }
 }

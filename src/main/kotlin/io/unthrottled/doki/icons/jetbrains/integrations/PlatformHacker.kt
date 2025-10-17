@@ -1,6 +1,5 @@
 package io.unthrottled.doki.icons.jetbrains.integrations
 
-import io.unthrottled.doki.icons.jetbrains.path.IconPathReplacementComponent
 import io.unthrottled.doki.icons.jetbrains.tools.Logging
 import io.unthrottled.doki.icons.jetbrains.tools.logger
 import io.unthrottled.doki.icons.jetbrains.tools.runSafely
@@ -10,13 +9,6 @@ import javassist.expr.ExprEditor
 import javassist.expr.MethodCall
 
 object PlatformHacker : Logging {
-  init {
-    IconPathReplacementComponent.installComponents()
-    if(System.getenv("DOKI_HACK") != "false") {
-      hackPlatform()
-    }
-  }
-
   fun hackPlatform() {
     hackEXPUI()
   }

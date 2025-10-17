@@ -5,6 +5,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
+import io.unthrottled.doki.icons.jetbrains.integrations.PlatformHacker
 import io.unthrottled.doki.icons.jetbrains.laf.LAFIconReplacementComponent
 import io.unthrottled.doki.icons.jetbrains.onboarding.UserOnBoarding
 import io.unthrottled.doki.icons.jetbrains.path.ExperimentalUIFixer
@@ -58,6 +59,11 @@ class PluginMaster : ProjectManagerListener, Disposable, Logging {
   fun initializePlugin() {
     ProjectManager.getInstance().openProjects
       .forEach { registerListenersForProject(it) }
+
+    // Defer any platform hacks until after the app frame is created to avoid service access during class initialization
+    if (System.getenv("DOKI_HACK") != "false") {
+      PlatformHacker.hackPlatform()
+    }
   }
 }
 

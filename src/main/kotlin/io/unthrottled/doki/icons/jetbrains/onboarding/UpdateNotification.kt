@@ -46,7 +46,6 @@ object UpdateNotification {
       )
         .setTitle("$PLUGIN_NAME updated to v$newVersion")
         .setIcon(PLUGIN_ICON)
-        .setListener(NotificationListener.UrlOpeningListener(false))
 
     showNotification(project, updateNotification)
   }
@@ -77,7 +76,6 @@ object UpdateNotification {
       NotificationType.INFORMATION,
     ).setIcon(PLUGIN_ICON)
       .setTitle(title)
-      .setListener(listener ?: defaultListener)
       .notify(project)
   }
 

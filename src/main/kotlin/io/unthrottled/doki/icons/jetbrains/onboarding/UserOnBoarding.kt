@@ -15,7 +15,7 @@ object UserOnBoarding {
     getNewVersion().ifPresent { newVersion ->
       Config.instance.version = newVersion
       StartupManager.getInstance(project)
-        .runWhenProjectIsInitialized {
+        .runAfterOpened {
           UpdateNotification.display(project, newVersion)
         }
     }
