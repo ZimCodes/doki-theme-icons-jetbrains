@@ -1,5 +1,3 @@
-import org.jetbrains.intellij.platform.gradle.TestFrameworkType
-
 System.setProperty("HACK", "false")
 
 plugins {
@@ -33,10 +31,6 @@ dependencies {
   implementation("commons-io:commons-io:2.15.1")
   implementation("org.javassist:javassist:3.29.2-GA")
   implementation("io.sentry:sentry:6.28.0")
-  testImplementation("org.assertj:assertj-core:3.25.3")
-  testImplementation("io.mockk:mockk:1.13.8")
-  testImplementation(libs.junit)
-  testImplementation(libs.opentest4j)
 
   // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
   intellijPlatform {
@@ -47,8 +41,6 @@ dependencies {
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
     plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
-
-    testFramework(TestFrameworkType.Platform)
   }
 }
 
@@ -65,32 +57,6 @@ intellijPlatform {
   pluginConfiguration {
     name = providers.gradleProperty("pluginName")
     version = providers.gradleProperty("pluginVersion")
-
-    // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
-//    description = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
-//      val start = "<!-- Plugin description -->"
-//      val end = "<!-- Plugin description end -->"
-//
-//      with(it.lines()) {
-//        if (!containsAll(listOf(start, end))) {
-//          throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
-//        }
-//        subList(indexOf(start) + 1, indexOf(end)).joinToString("\n").let(::markdownToHTML)
-//      }
-//    }
-
-//    val changelog = project.changelog // local variable for configuration cache compatibility
-//    // Get the latest available change notes from the changelog file
-//    changeNotes = providers.gradleProperty("pluginVersion").map { pluginVersion ->
-//      with(changelog) {
-//        renderItem(
-//          (getOrNull(pluginVersion) ?: getUnreleased())
-//            .withHeader(false)
-//            .withEmptySections(false),
-//          Changelog.OutputType.HTML,
-//        )
-//      }
-//    }
 
     ideaVersion {
       sinceBuild = providers.gradleProperty("pluginSinceBuild")
@@ -130,31 +96,5 @@ tasks {
 
   patchPluginXml {
     dependsOn("buildThemes")
-  }
-//  publishPlugin {
-//    dependsOn(patchChangelog)
-//  }
-}
-
-intellijPlatformTesting {
-  runIde {
-//    maxHeapSize = "2g"
-//    systemProperty("idea.ui.icons.svg.disk.cache", "false")
-    register("runIdeForUiTests") {
-      task {
-        jvmArgumentProviders += CommandLineArgumentProvider {
-          listOf(
-            "-Drobot-server.port=8082",
-            "-Dide.mac.message.dialogs.as.sheets=false",
-            "-Djb.privacy.policy.text=<!--999.999-->",
-            "-Djb.consents.confirmation.enabled=false",
-          )
-        }
-      }
-
-      plugins {
-        robotServerPlugin()
-      }
-    }
   }
 }
