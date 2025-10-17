@@ -33,3 +33,4 @@ iconSource/
 iconSource
 tmp
 .intellijPlatform/
+.kotlin
