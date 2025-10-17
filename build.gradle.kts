@@ -30,7 +30,6 @@ repositories {
 dependencies {
   implementation("commons-io:commons-io:2.15.1")
   implementation("org.javassist:javassist:3.29.2-GA")
-  implementation("io.sentry:sentry:6.28.0")
 
   // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
   intellijPlatform {
@@ -41,14 +40,6 @@ dependencies {
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
     plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
-  }
-}
-
-configurations {
-  implementation.configure {
-    // sentry brings in a slf4j that breaks when
-    // with the platform slf4j
-    exclude("org.slf4j")
   }
 }
 
