@@ -29,8 +29,8 @@ masterThemes/
 .idea
 .qodana
 build
-iconSource/
-iconSource
 tmp
 .intellijPlatform/
 .kotlin
+*.hprof
+iconSource/

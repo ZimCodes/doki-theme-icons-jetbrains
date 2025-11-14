@@ -2,6 +2,23 @@
 
 # Changelog for Doki Theme Icons: JetBrains
 
+## [Unreleased]
+
+## Added
+- Update Gradle: `9.1` -> `9.2`
+- Project support for configuration caching
+- Update dependencies
+
+## Changed
+- Turn some services into light services
+
+## Removed
+- `org.javassist` dependency
+- `PlatformHacker.kt`, which uses hacky methods to get UI working correctly
+
+## Fixed
+- Increase max memory and metaspace when using Gradle 
+
 ## [2025.2 Build Support] - 1.7.0
 
 ### Added

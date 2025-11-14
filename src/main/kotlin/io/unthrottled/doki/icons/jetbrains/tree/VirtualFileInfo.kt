@@ -7,9 +7,9 @@ class VirtualFileInfo(
   val psiElement: PsiElement,
   private val virtualFile: VirtualFile,
 ) {
-  val name: String?
+  val name: String
     get() = virtualFile.name
 
-  val fileType: String?
+  val fileType: String
     get() = virtualFile.fileType.name
 }

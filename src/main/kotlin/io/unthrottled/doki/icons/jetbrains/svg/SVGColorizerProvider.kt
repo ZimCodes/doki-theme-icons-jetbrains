@@ -60,7 +60,7 @@ class SVGColorPaletteReplacer(private val dokiTheme: DokiTheme) : PatcherProvide
             .toHexString()
       }
 
-  override fun attributeForPath(path: String): SvgAttributePatcher? =
+  override fun attributeForPath(path: String): SvgAttributePatcher =
     PalletPatcher(
       newPalette,
     )
@@ -123,7 +123,7 @@ class PalletPatcher(
 }
 
 class SVGColorizerProvider(private val dokiTheme: DokiTheme) : PatcherProvider {
-  override fun attributeForPath(path: String): SvgAttributePatcher? = SVGColorizer(dokiTheme)
+  override fun attributeForPath(path: String): SvgAttributePatcher = SVGColorizer(dokiTheme)
 
   private val digest =
     toLongArray(("colorize" + dokiTheme.id + dokiTheme.version).toByteArray(Charsets.UTF_8))
@@ -199,9 +199,9 @@ class SVGColorizer(private val dokiTheme: DokiTheme) : Patcher {
 
   private fun getAccentColor() = dokiTheme.colors["accentColor"]!!.toColor()
 
-  private fun getIconAccentContrastColor() = JBColor.namedColor("Doki.Icon.Accent.Contrast.color", Color.WHITE)
+  private fun getIconAccentContrastColor() = JBColor.namedColor("Doki.Icon.Accent.Contrast.color", JBColor.WHITE)
 
-  private fun getThemedStartColor() = JBColor.namedColor("Doki.startColor", Color.CYAN).toHexString()
+  private fun getThemedStartColor() = JBColor.namedColor("Doki.startColor", JBColor.CYAN).toHexString()
 
-  private fun getThemedStopColor() = JBColor.namedColor("Doki.stopColor", Color.CYAN).toHexString()
+  private fun getThemedStopColor() = JBColor.namedColor("Doki.stopColor", JBColor.CYAN).toHexString()
 }

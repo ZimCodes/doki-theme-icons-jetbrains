@@ -46,7 +46,7 @@ object RestTools {
             body.toOptional()
           }) {
             log.warn("Unable to get remote asset: $url for raisins", it)
-            Optional.empty<T>()
+            Optional.empty()
           }
         }
     }) {

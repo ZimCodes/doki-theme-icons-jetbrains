@@ -30,7 +30,7 @@ fun updateToolbars() {
     if (oneArg != null) {
       val paramType = oneArg.parameterTypes[0]
       val arg: Any = when {
-        paramType == java.lang.Boolean.TYPE || paramType == java.lang.Boolean::class.java -> true
+        paramType == Boolean::class.javaObjectType || paramType == Boolean::class.javaPrimitiveType -> true
         else -> {
           logger.warn("Unsupported parameter type for updateAllToolbarsImmediately: ${paramType.name}")
           return

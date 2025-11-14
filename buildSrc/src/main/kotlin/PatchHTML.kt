@@ -1,12 +1,16 @@
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.nio.file.Files
 import java.nio.file.StandardOpenOption
 
-open class PatchHTML : DefaultTask() {
+abstract class PatchHTML : DefaultTask() {
 
+  @get:OutputDirectory
+  abstract val htmlDirectory: DirectoryProperty
   init {
     group = "documentation"
     description = "Patches the HTML to make it pretty."
@@ -14,7 +18,8 @@ open class PatchHTML : DefaultTask() {
 
   @TaskAction
   fun run() {
-    val htmlDirectory = createHtmlDirectory(project)
+    val htmlDirectory = htmlDirectory.get().asFile.toPath()
+    Files.createDirectories(htmlDirectory)
     Files.walk(htmlDirectory)
       .filter { !Files.isDirectory(it) }
       .forEach {

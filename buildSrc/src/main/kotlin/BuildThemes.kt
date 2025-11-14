@@ -17,12 +17,19 @@ import io.unthrottled.doki.build.jvm.tools.PathTools.readJSONFromFile
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.nio.file.Paths.get
 import java.nio.file.StandardCopyOption
 import java.nio.file.StandardOpenOption
 import java.util.stream.Collectors
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
 // todo figure out how to share.
@@ -40,10 +47,37 @@ data class IconPathMapping(
   val isOddBall: Boolean?,
 )
 
-open class BuildThemes : DefaultTask() {
+abstract class BuildThemes : DefaultTask() {
 
-  private val gson = GsonBuilder()
-    .create()
+  @get:InputDirectory
+  abstract val buildSourceAssetDirectory: DirectoryProperty
+
+  @get:InputDirectory
+  abstract val masterThemesDirectory: DirectoryProperty
+
+  @get:Internal
+  abstract val resourcesDirectory: DirectoryProperty
+
+  @get:OutputDirectory
+  abstract val iconsDirectory: DirectoryProperty
+
+  @get:OutputDirectory
+  abstract val generatedResourcesDirectory: DirectoryProperty
+
+  @get:InputFiles
+  abstract val resourceMappingFiles: ConfigurableFileCollection
+
+  @get:InputFile
+  abstract val specialUsedIconsMapping: RegularFileProperty
+
+  @get:Internal
+  abstract val iconSourceDirectory: DirectoryProperty
+
+  @get:InputDirectory
+  abstract val svgIconSourceDirectory: DirectoryProperty
+
+  @get:InputFile
+  abstract val iconPaletteTemplate: RegularFileProperty
 
   init {
     group = "doki"
@@ -52,8 +86,8 @@ open class BuildThemes : DefaultTask() {
 
   @TaskAction
   fun run() {
-    val buildSourceAssetDirectory = getBuildSourceAssetDirectory()
-    val masterThemesDirectory = get(project.rootDir.absolutePath, "masterThemes")
+    val buildSourceAssetDirectory = buildSourceAssetDirectory.get().asFile.toPath()
+    val masterThemesDirectory = masterThemesDirectory.get().asFile.toPath()
     val constructableAssetSupplier =
       ConstructableAssetSupplierFactory.createCommonAssetsTemplate(
         buildSourceAssetDirectory,
@@ -62,7 +96,7 @@ open class BuildThemes : DefaultTask() {
 
     cleanDirectory(getGenerateResourcesDirectory())
 
-    val jetbrainsIconsThemeDirectory = getThemeDefinitionDirectory()
+    val jetbrainsIconsThemeDirectory = get(buildSourceAssetDirectory.toString(),"themes")
 
     val allDokiThemeDefinitions = getAllDokiThemeDefinitions(
       DokiProduct.ICONS,
@@ -84,19 +118,13 @@ open class BuildThemes : DefaultTask() {
   }
 
   private fun copyIconPaletteFromIconSource() {
-    if(isCI()) {
+    if (isCI()) {
       return
     }
 
     Files.copy(
-      Paths.get(
-        iconSourceDirectory().toAbsolutePath().toString(),
-        "buildSrc",
-        "assets",
-        "templates",
-        "icon.palette.template.json"
-      ),
-      Paths.get(
+      iconPaletteTemplate.get().asFile.toPath(),
+      get(
         getGenerateResourcesDirectory().toAbsolutePath().toString(),
         "icon.palette.template.json"
       )
@@ -108,45 +136,30 @@ open class BuildThemes : DefaultTask() {
   }
 
   private fun copyUsedIconsFromIconSource() {
-    if(isCI()) {
+    if (isCI()) {
       return
     }
+    val iconsDirectory = iconsDirectory.get().asFile.toPath()
+    ensureDirectoryExists(iconsDirectory)
+    cleanDirectory(iconsDirectory)
 
-    ensureDirectoryExists(getIconsDirectory())
-    cleanDirectory(getIconsDirectory())
-
-    val allUsedIcons = arrayListOf(
-      "files.named.mappings.json",
-      "alex-icons.path.mappings.json",
-      "files.named.mappings.json",
-      "glyph-icons.path.mappings.json",
-      "file-icons.path.mappings.json",
-      "ui-icons.path.mappings.json",
-      "node.path.mappings.json",
-    )
-      .flatMap { mappingPak ->
-        readJSONFromFile(
-          getFileFromResources(mappingPak),
-          object : TypeToken<List<IconPathMapping>>() {}
-        )
-      }
-      .filter { it.isOddBall != true }
+    val allUsedIcons = resourceMappingFiles.map { it.toPath() }.flatMap {
+      readJSONFromFile(it,
+      object: TypeToken<List<IconPathMapping>>(){}
+      )
+    }.filter { it.isOddBall != true }
       .map { it.iconName }
       .toMutableSet()
 
     allUsedIcons.addAll(
       readJSONFromFile(
-        get(
-          getBuildSourceAssetDirectory().toAbsolutePath().toString(),
-          "templates",
-          "specialUsedIcons.json"
-        ),
+        specialUsedIconsMapping.get().asFile.toPath(),
         object : TypeToken<List<String>>() {}
       )
     )
 
-    val stagingIconDirectory = Paths.get("staging")
-    val copiedIcons = Files.walk(svgIconSourceDirectory())
+    val stagingIconDirectory = get("staging")
+    val copiedIcons = Files.walk(svgIconSourceDirectory.get().asFile.toPath())
       .filter {
         allUsedIcons.contains(it.fileName.toString()) &&
           it.contains(stagingIconDirectory).not()
@@ -154,8 +167,8 @@ open class BuildThemes : DefaultTask() {
       .map { dokiIconPath ->
         Files.copy(
           dokiIconPath,
-          Paths.get(
-            getIconsDirectory().toAbsolutePath().toString(),
+          get(
+            iconsDirectory.toString(),
             dokiIconPath.fileName.toString()
           ),
           StandardCopyOption.REPLACE_EXISTING
@@ -168,17 +181,14 @@ open class BuildThemes : DefaultTask() {
       allUsedIcons.toMutableSet()
         .subtract(copiedIcons)
 
-    if(diff.isNotEmpty()) {
-      throw RuntimeException("""Hey Silly, you missed these icons "${
-        diff.joinToString(", ")
-      }".""")
+    if (diff.isNotEmpty()) {
+      throw RuntimeException(
+        """Hey Silly, you missed these icons "${
+          diff.joinToString(", ")
+        }"."""
+      )
     }
   }
-
-  private fun getFileFromResources(mappingFile: String): Path = get(
-    getResourcesDirectory().toAbsolutePath().toString(),
-    mappingFile,
-  )
 
   private fun writeThemesAsJson(dokiThemes: List<DokiTheme>) {
     val directoryToPutStuffIn =
@@ -186,11 +196,11 @@ open class BuildThemes : DefaultTask() {
         getGenerateResourcesDirectory()
       )
 
-    val dokiThemesPath = get(directoryToPutStuffIn.toString(), "doki-theme-definitions.json");
+    val dokiThemesPath = get(directoryToPutStuffIn.toString(), "doki-theme-definitions.json")
 
     Files.newBufferedWriter(dokiThemesPath, StandardOpenOption.CREATE_NEW)
       .use { writer ->
-        gson.toJson(dokiThemes, writer)
+        GsonBuilder().create().toJson(dokiThemes, writer)
       }
   }
 
@@ -217,9 +227,6 @@ open class BuildThemes : DefaultTask() {
     )
   }
 
-  private fun getThemeDefinitionDirectory() = get(getBuildSourceAssetDirectory().toString(), "themes")
-
-  private fun getBuildSourceAssetDirectory() = get(project.rootDir.absolutePath, "buildSrc", "assets")
 
   private fun resolveColors(
     masterThemeDefinition: MasterThemeDefinition,
@@ -254,42 +261,5 @@ open class BuildThemes : DefaultTask() {
       }
   }
 
-  private fun sanitizePath(dirtyPath: String): String =
-    dirtyPath.replace(File.separator, "/")
-
-  private fun getGenerateResourcesDirectory(): Path = get(
-    getResourcesDirectory().toString(),
-    "doki",
-    "generated"
-  )
-
-  private fun getIconsDirectory(): Path = get(
-    getResourcesDirectory().toString(),
-    "doki",
-    "icons"
-  )
-
-  private fun getResourcesDirectory(): Path = get(
-    project.rootDir.absolutePath,
-    "src",
-    "main",
-    "resources"
-  )
-
-  private fun iconSourceDirectory(): Path = get(
-    project.rootDir.absolutePath,
-    "iconSource",
-  )
-  private fun svgIconSourceDirectory(): Path = get(
-    iconSourceDirectory().toAbsolutePath().toString(),
-    "icons",
-  )
-
-  private fun extractResourcesPath(destination: Path): String {
-    val fullResourcesPath = destination.toString()
-    val separator = File.separator
-    val editorPathResources =
-      fullResourcesPath.substring(fullResourcesPath.indexOf("${separator}doki${separator}theme"))
-    return editorPathResources.replace(separator.toString(), "/")
-  }
+  private fun getGenerateResourcesDirectory(): Path = generatedResourcesDirectory.get().asFile.toPath()
 }

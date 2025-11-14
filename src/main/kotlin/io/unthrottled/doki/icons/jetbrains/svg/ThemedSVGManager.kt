@@ -1,8 +1,8 @@
 package io.unthrottled.doki.icons.jetbrains.svg
 
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.Service
 import io.unthrottled.doki.icons.jetbrains.themes.DokiThemePayload
 import io.unthrottled.doki.icons.jetbrains.themes.IconThemeManager
 import io.unthrottled.doki.icons.jetbrains.themes.ThemeManagerListener
@@ -16,6 +16,7 @@ import java.lang.reflect.Method
 import java.lang.reflect.Proxy
 import javax.swing.SwingUtilities
 
+@Service
 class ThemedSVGManager : ThemeManagerListener, Disposable, Logging {
   companion object {
     fun getInstance(): ThemedSVGManager =

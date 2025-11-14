@@ -16,14 +16,10 @@
                              displayName="Doki Theme Icons"
                              groupId="appearance"/>
     <applicationService serviceImplementation="io.unthrottled.doki.icons.jetbrains.config.Config"/>
-    <applicationService serviceImplementation="io.unthrottled.doki.icons.jetbrains.themes.IconThemeManager"/>
-    <applicationService serviceImplementation="io.unthrottled.doki.icons.jetbrains.svg.ThemedSVGManager"/>
-    <applicationService serviceImplementation="io.unthrottled.doki.icons.jetbrains.PluginMaster"/>
     <iconProvider implementation="io.unthrottled.doki.icons.jetbrains.tree.TreeNamedIconProvider" order="first"/>
     <notificationGroup displayType="BALLOON" id="Doki Theme Icons Updates" isLogByDefault="false"
                        toolWindowId="Doki Theme Icons Updates"/>
     <postStartupActivity implementation="io.unthrottled.doki.icons.jetbrains.listeners.PluginPostStartUpActivity"/>
-    <projectService serviceImplementation="io.unthrottled.doki.icons.jetbrains.tree.OptimisticNameProvider"/>
   </extensions>
 
   <actions>

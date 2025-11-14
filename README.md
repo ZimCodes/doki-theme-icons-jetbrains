@@ -37,7 +37,7 @@ A nice mix of cool and cute icons to compliment your favorite theme!
 
 # Installation
 
-- Download the [latest release](https://github.com/doki-theme/doki-theme-icons-jetbrains/releases/latest)
+- Download the [latest release](https://github.com/ZimCodes/doki-theme-icons-jetbrains/releases/latest)
 - Install it by going to <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from
   disk...</kbd>
 

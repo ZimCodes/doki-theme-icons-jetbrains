@@ -6,6 +6,7 @@ import com.intellij.ide.ui.LafManagerListener
 import com.intellij.ide.ui.laf.UIThemeLookAndFeelInfo
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.Service
 import com.intellij.ui.svg.SvgAttributePatcher
 import com.intellij.util.messages.Topic
 import io.unthrottled.doki.icons.jetbrains.DokiThemeIcons
@@ -49,6 +50,7 @@ interface ThemeManagerListener : EventListener {
   fun onDokiThemeRemoved()
 }
 
+@Service
 class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Logging {
   companion object {
     const val DEFAULT_THEME_ID = "13adffd9-acbe-47af-8101-fa71269a4c5c" // Zero Two Obsidian

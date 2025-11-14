@@ -1,11 +1,9 @@
-System.setProperty("HACK", "false")
-
 plugins {
   // Custom plugin for building all the themes
   id("doki-theme-plugin")
   id("java") // Java support
-  id("org.jetbrains.kotlin.jvm") version "2.3.0-Beta1"
-  id("org.jetbrains.intellij.platform") version "2.10.0"
+  id("org.jetbrains.kotlin.jvm") version "2.3.0-Beta2"
+  id("org.jetbrains.intellij.platform") version "2.10.4"
 }
 
 group = providers.gradleProperty("pluginGroup").get()
@@ -28,8 +26,7 @@ repositories {
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
-  implementation("commons-io:commons-io:2.20.0")
-  implementation("org.javassist:javassist:3.30.2-GA")
+  implementation("commons-io:commons-io:2.21.0")
 
   // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
   intellijPlatform {
@@ -83,9 +80,6 @@ tasks {
 
   buildSearchableOptions {
     enabled = false
-    // Disabled due to headless IDE memory leak (GotItTooltip not disposed) during buildSearchableOptions.
-    // See issue logs in CI and JB docs on disposers. Re-enable if upstream fixes.
-    environment["DOKI_HACK"] = "false"
   }
 
   patchPluginXml {

@@ -13,9 +13,7 @@ class ThemeComboItem(private val dokiTheme: DokiTheme) {
 
     other as ThemeComboItem
 
-    if (dokiTheme.id != other.dokiTheme.id) return false
-
-    return true
+    return dokiTheme.id == other.dokiTheme.id
   }
 
   override fun hashCode(): Int {

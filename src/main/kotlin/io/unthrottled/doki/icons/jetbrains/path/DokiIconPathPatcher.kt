@@ -54,9 +54,7 @@ class DokiIconPathPatcher(private val mappingFile: String) : IconPathPatcher(), 
 
     other as DokiIconPathPatcher
 
-    if (mappingFile != other.mappingFile) return false
-
-    return true
+    return mappingFile == other.mappingFile
   }
 
   override fun hashCode(): Int {
