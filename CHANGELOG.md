@@ -8,9 +8,12 @@
 - Update Gradle: `9.1` -> `9.2`
 - Project support for configuration caching
 - Update dependencies
+- Update project dev source dependencies
+- Add build caching support
 
 ## Changed
 - Turn some services into light services
+- Change multi-project structure: `buildSrc` -> composite builds (build-logic)
 
 ## Removed
 - `org.javassist` dependency
