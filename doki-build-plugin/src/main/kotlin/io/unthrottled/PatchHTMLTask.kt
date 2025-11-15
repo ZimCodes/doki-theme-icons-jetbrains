@@ -1,5 +1,7 @@
+package io.unthrottled.doki.build.plugin
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import org.jsoup.Jsoup
@@ -7,7 +9,8 @@ import org.jsoup.nodes.Element
 import java.nio.file.Files
 import java.nio.file.StandardOpenOption
 
-abstract class PatchHTML : DefaultTask() {
+@CacheableTask
+abstract class PatchHTMLTask : DefaultTask() {
 
   @get:OutputDirectory
   abstract val htmlDirectory: DirectoryProperty

@@ -1,3 +1,5 @@
+package io.unthrottled.doki.build.plugin
+
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import io.unthrottled.doki.build.jvm.models.AssetTemplateDefinition
@@ -14,7 +16,6 @@ import io.unthrottled.doki.build.jvm.tools.GroupToNameMapping.getLafNamePrefix
 import io.unthrottled.doki.build.jvm.tools.PathTools.cleanDirectory
 import io.unthrottled.doki.build.jvm.tools.PathTools.ensureDirectoryExists
 import io.unthrottled.doki.build.jvm.tools.PathTools.readJSONFromFile
-import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths.get
@@ -25,11 +26,14 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 
 // todo figure out how to share.
@@ -47,12 +51,15 @@ data class IconPathMapping(
   val isOddBall: Boolean?,
 )
 
-abstract class BuildThemes : DefaultTask() {
+@CacheableTask
+abstract class BuildThemesTask : DefaultTask() {
 
   @get:InputDirectory
+  @get:PathSensitive(PathSensitivity.RELATIVE)
   abstract val buildSourceAssetDirectory: DirectoryProperty
 
   @get:InputDirectory
+  @get:PathSensitive(PathSensitivity.RELATIVE)
   abstract val masterThemesDirectory: DirectoryProperty
 
   @get:Internal
@@ -65,18 +72,22 @@ abstract class BuildThemes : DefaultTask() {
   abstract val generatedResourcesDirectory: DirectoryProperty
 
   @get:InputFiles
+  @get:PathSensitive(PathSensitivity.NAME_ONLY)
   abstract val resourceMappingFiles: ConfigurableFileCollection
 
   @get:InputFile
+  @get:PathSensitive(PathSensitivity.NAME_ONLY)
   abstract val specialUsedIconsMapping: RegularFileProperty
 
   @get:Internal
   abstract val iconSourceDirectory: DirectoryProperty
 
   @get:InputDirectory
+  @get:PathSensitive(PathSensitivity.RELATIVE)
   abstract val svgIconSourceDirectory: DirectoryProperty
 
   @get:InputFile
+  @get:PathSensitive(PathSensitivity.NAME_ONLY)
   abstract val iconPaletteTemplate: RegularFileProperty
 
   init {

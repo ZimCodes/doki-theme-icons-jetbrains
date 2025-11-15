@@ -34,3 +34,4 @@ tmp
 .kotlin
 *.hprof
 iconSource/
+doki-build-source-jvm/
