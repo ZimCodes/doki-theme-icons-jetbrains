@@ -2,14 +2,16 @@
 
 # Changelog for Doki Theme Icons: JetBrains
 
-## [Unreleased]
+## [2025.3 Build Support] - v1.8.0
 
 ## Added
-- Update Gradle: `9.1` -> `9.2`
+- Update Gradle: `9.1` -> `9.2.1`
 - Project support for configuration caching
 - Update dependencies
 - Update project dev source dependencies
 - Add build caching support
+- Support for IDE 2025.3
+- New custom task, `MultiExecTask`
 
 ## Changed
 - Turn some services into light services

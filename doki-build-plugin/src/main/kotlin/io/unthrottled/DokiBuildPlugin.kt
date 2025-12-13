@@ -24,5 +24,21 @@ class DokiBuildPlugin : Plugin<Project> {
     project.tasks.register<PatchHTMLTask>("patchHTML") {
       htmlDirectory.set(project.layout.projectDirectory.dir("build/html"))
     }
+    project.tasks.register<MultiExecTask>("buildThemeDeps") {
+      description = "Builds yarn dependencies needed to build the doki themes."
+      val installCMD = "yarn install"
+      commandExecList.set(listOf<String>(
+        "cd doki-build-source",
+        installCMD,
+        "yarn build",
+        "cd ../masterThemes",
+        installCMD,
+        "yarn generateAllIcons",
+        "yarn modifyThemes",
+        "cd ../iconSource",
+        installCMD,
+        "yarn buildIcons"))
+     startDirectory.set(project.layout.projectDirectory)
+    }
   }
 }

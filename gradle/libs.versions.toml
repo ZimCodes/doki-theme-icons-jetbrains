@@ -1,7 +1,7 @@
 [versions]
 commons-io = "2.21.0"
 kotlin = "2.3.0-Beta2"
-intellij-platform = "2.10.4"
+intellij-platform = "2.10.5"
 
 [libraries]
 commons-io = {module = "commons-io:commons-io", version.ref = "commons-io"}

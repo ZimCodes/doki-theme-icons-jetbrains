@@ -4,6 +4,8 @@ testAssets/
 # Generated Directory
 src/main/resources/doki/generated
 src/main/resources/doki/icons
+doki-build-plugin/assets/themes/**
+doki-build-plugin/assets/themes/*!.icons.definition.json
 
 # macOS
 .DS_Store
@@ -35,3 +37,4 @@ tmp
 *.hprof
 iconSource/
 doki-build-source-jvm/
+doki-build-source/
