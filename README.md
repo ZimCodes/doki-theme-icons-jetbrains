@@ -5,6 +5,7 @@ Doki Theme Icons: JetBrains - Maintenance
     <img src="https://doki.assets.unthrottled.io/misc/doki_icons_logo.svg" ></img>
 </div>
 
+> [!IMPORTANT]
 > ***This repo was created to provide maintenance for the main project
 repo, [Unthrottled / doki-theme-icons-jetbrains](https://github.com/doki-theme/doki-theme-icons-jetbrains), until
 productivity occurs
