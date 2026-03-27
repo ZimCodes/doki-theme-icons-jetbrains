@@ -1,6 +1,12 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
 # Changelog for Doki Theme Icons: JetBrains
+## [2026.1 Build Support] - v1.9.0
+
+## Changed
+- Update gradle dependencies
+- Update project dependecies
+- Update Gradle: `9.2.1` -> `9.4.1`
 
 ## [2025.3 Build Support] - v1.8.0
 

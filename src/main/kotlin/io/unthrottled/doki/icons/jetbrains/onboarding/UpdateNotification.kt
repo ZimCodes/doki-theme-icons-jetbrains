@@ -20,10 +20,10 @@ private fun buildUpdateMessage(): String =
   """
   What's New?<br>
   <ul>
-    <li>Added 2025.3 build support. YAY!!!</li>
+    <li>Added 2026.1 build support. YAY!!!</li>
   </ul>
-  <br>See the <a href="https://github.com/doki-theme/doki-theme-icons-jetbrains#documentation">documentation</a> for features, usages, and configurations.
-  <br>The <a href="https://github.com/doki-theme/doki-theme-icons-jetbrains/blob/master/CHANGELOG.md">changelog</a> is available for more details.
+  <br>See the <a href="https://github.com/ZimCodes/doki-theme-icons-jetbrains#documentation">documentation</a> for features, usages, and configurations.
+  <br>The <a href="https://github.com/ZimCodes/doki-theme-icons-jetbrains/blob/main/CHANGELOG.md">changelog</a> is available for more details.
   <br><br>
   Thanks for downloading!
   </div>
