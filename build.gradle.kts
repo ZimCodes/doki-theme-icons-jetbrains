@@ -80,6 +80,9 @@ tasks {
   buildSearchableOptions {
     enabled = false
   }
+  prepareJarSearchableOptions {
+    enabled = false
+  }
 
   patchPluginXml {
     dependsOn("buildThemes")
