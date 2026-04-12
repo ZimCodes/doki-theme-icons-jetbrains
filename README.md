@@ -85,7 +85,8 @@ would consider a mention in the HTML/JS source sufficient also.
 
 ## Contributing
 
-If you would like to contribute to the project, please feel free to create a pull request with your ideas!
+If you would like to contribute to the project, please feel free to create a pull request with your ideas! After taking a
+look at [CONTRIBUTING.md](./CONTRIBUTING.md) of course.
 
 Some ways to contribute:
 - Create new icons. 
