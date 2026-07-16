@@ -1,7 +1,7 @@
 [versions]
-commons-io = "2.21.0"
-kotlin = "2.3.20"
-intellij-platform = "2.13.1"
+commons-io = "2.22.0"
+kotlin = "2.4.20-Beta1"
+intellij-platform = "2.18.1"
 
 [libraries]
 commons-io = {module = "commons-io:commons-io", version.ref = "commons-io"}
