@@ -17,12 +17,7 @@ out/
 
 # Gradle
 .gradle/
-
-build/*
-doki-build-plugin/build/
-# Keeps doki-build-plugin files
-!build/plugin
-!build/plugin/**
+build/
 classes/
 
 #gradle.properties
