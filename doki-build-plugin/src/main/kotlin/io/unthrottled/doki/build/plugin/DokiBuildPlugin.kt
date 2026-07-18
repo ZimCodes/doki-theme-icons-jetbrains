@@ -30,7 +30,7 @@ class DokiBuildPlugin : Plugin<Project> {
     }
     project.tasks.register<MultiExecTask>("buildThemeDeps") {
       description = "Builds yarn dependencies needed to build the doki themes."
-      dependsOn("getRepos")
+      mustRunAfter("getRepos")
       val installCMD = "yarn install"
       commandExecMap.put(
         MultiExecTask.OSType.AUTO, listOf(
@@ -47,8 +47,10 @@ class DokiBuildPlugin : Plugin<Project> {
       )
       startDirectory.set(project.layout.projectDirectory)
     }
+    val masterThemeDir = project.layout.projectDirectory.dir("masterThemes")
     project.tasks.register<MultiExecTask>("getRepos") {
       description = "Retrieves all repositories doki-theme-icons-jetbrains relies on."
+      onlyIf { masterThemeDir.asFile.exists().not() }
       val gitCMD = "git clone"
       val githubBaseURL = "https://github.com/ZimCodes"
       val repoNames = mapOf(
