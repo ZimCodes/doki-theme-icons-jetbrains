@@ -10,7 +10,6 @@ import org.gradle.kotlin.dsl.register
 class DokiBuildPlugin : Plugin<Project> {
   override fun apply(project: Project) {
     project.tasks.register<BuildThemesTask>("buildThemes") {
-      val f =""
       // buildSrc
       dokiPluginAssetDirectory.set(project.layout.projectDirectory.dir("doki-build-plugin/assets"))
       specialUsedIconsMapping.set(dokiPluginAssetDirectory.file("templates/specialUsedIcons.json"))
