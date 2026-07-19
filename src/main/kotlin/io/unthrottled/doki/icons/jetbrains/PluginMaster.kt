@@ -23,14 +23,13 @@ class PluginMaster : ProjectManagerListener, Disposable, Logging {
       ExperimentalUIFixer.fixExperimentalUI()
     }
 
-    val instance: PluginMaster
-      get() = ApplicationManager.getApplication().getService(PluginMaster::class.java)
+    fun getInstance(): PluginMaster = ApplicationManager.getApplication().getService(PluginMaster::class.java)
   }
 
   private val projectListeners: ConcurrentMap<String, ProjectListeners> = ConcurrentHashMap()
 
   init {
-    IconThemeManager.instance.init()
+    IconThemeManager.getInstance().init()
     ThemedSVGManager.getInstance().initialize()
     IconPathReplacementComponent.initialize()
     LAFIconReplacementComponent.initialize()
@@ -50,7 +49,7 @@ class PluginMaster : ProjectManagerListener, Disposable, Logging {
   }
 
   override fun dispose() {
-    IconThemeManager.instance.dispose()
+    IconThemeManager.getInstance().dispose()
     ThemedSVGManager.getInstance().dispose()
     IconPathReplacementComponent.dispose()
     LAFIconReplacementComponent.dispose()

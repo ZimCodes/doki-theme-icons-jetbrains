@@ -5,7 +5,7 @@ import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx
 import com.intellij.openapi.util.IconLoader
 import io.unthrottled.doki.icons.jetbrains.config.Config
 import io.unthrottled.doki.icons.jetbrains.config.IconConfigListener
-import io.unthrottled.doki.icons.jetbrains.config.IconSettingsModel
+import io.unthrottled.doki.icons.jetbrains.settings.IconSettingsModel
 import io.unthrottled.doki.icons.jetbrains.tools.updateToolbars
 
 data class IconReplacementPack(
@@ -56,7 +56,7 @@ object IconPathReplacementComponent : IconConfigListener {
 
     iconInstallPacs.forEach { pak ->
       IconLoader.removePathPatcher(pak.iconPatcher)
-      if (pak.iconConfigExtractor(Config.instance)) {
+      if (pak.iconConfigExtractor(Config.getInstance())) {
         IconLoader.installPathPatcher(pak.iconPatcher)
       }
     }
@@ -70,17 +70,8 @@ object IconPathReplacementComponent : IconConfigListener {
   }
 
   override fun iconConfigUpdated(
-    previousState: IconSettingsModel,
     newState: IconSettingsModel,
   ) {
-    val hasChanged =
-      iconInstallPacs.any {
-        it.iconSettingsExtractor(previousState) != it.iconSettingsExtractor(newState)
-      }
-    if (!hasChanged) {
-      return
-    }
-
     iconInstallPacs.forEach {
       IconLoader.removePathPatcher(it.iconPatcher)
     }

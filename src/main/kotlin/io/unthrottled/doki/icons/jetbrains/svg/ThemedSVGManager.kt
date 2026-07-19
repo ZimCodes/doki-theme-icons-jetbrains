@@ -30,7 +30,7 @@ class ThemedSVGManager : ThemeManagerListener, Disposable, Logging {
   }
 
   fun initialize() {
-    IconThemeManager.instance.currentTheme
+    IconThemeManager.getInstance().currentTheme
       .ifPresent {
         activateTheme(it)
       }

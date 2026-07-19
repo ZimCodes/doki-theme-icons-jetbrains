@@ -9,12 +9,12 @@ import io.unthrottled.doki.icons.jetbrains.tools.Logging
 internal class ProjectListener :
   ProjectManagerListener, Logging {
   override fun projectClosed(project: Project) {
-    PluginMaster.instance.projectClosed(project)
+    PluginMaster.getInstance().projectClosed(project)
   }
 }
 
 internal class PluginPostStartUpActivity : ProjectActivity {
   override suspend fun execute(project: Project) {
-    PluginMaster.instance.handleProjectOpened(project)
+    PluginMaster.getInstance().handleProjectOpened(project)
   }
 }

@@ -12,10 +12,9 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <applicationConfigurable id="io.unthrottled.doki.icons.jetbrains.settings.ThemeSettings"
-                             instance="io.unthrottled.doki.icons.jetbrains.settings.IconSettingsUI"
+                             instance="io.unthrottled.doki.icons.jetbrains.settings.IconSettingsView"
                              displayName="Doki Theme Icons"
                              groupId="appearance"/>
-    <applicationService serviceImplementation="io.unthrottled.doki.icons.jetbrains.config.Config"/>
     <iconProvider implementation="io.unthrottled.doki.icons.jetbrains.tree.TreeNamedIconProvider" order="first"/>
     <notificationGroup displayType="BALLOON" id="Doki Theme Icons Updates" isLogByDefault="false"
                        toolWindowId="Doki Theme Icons Updates"/>

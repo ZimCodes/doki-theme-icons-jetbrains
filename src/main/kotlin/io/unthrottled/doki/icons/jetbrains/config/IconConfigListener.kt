@@ -1,6 +1,7 @@
 package io.unthrottled.doki.icons.jetbrains.config
 
 import com.intellij.util.messages.Topic
+import io.unthrottled.doki.icons.jetbrains.settings.IconSettingsModel
 import java.util.EventListener
 
 interface IconConfigListener : EventListener {
@@ -11,7 +12,6 @@ interface IconConfigListener : EventListener {
   }
 
   fun iconConfigUpdated(
-    previousState: IconSettingsModel,
     newState: IconSettingsModel,
   )
 }

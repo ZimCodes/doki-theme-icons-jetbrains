@@ -13,7 +13,8 @@ import io.unthrottled.doki.icons.jetbrains.DokiThemeIcons
 import io.unthrottled.doki.icons.jetbrains.DokiThemeInformation
 import io.unthrottled.doki.icons.jetbrains.config.Config
 import io.unthrottled.doki.icons.jetbrains.config.IconConfigListener
-import io.unthrottled.doki.icons.jetbrains.config.IconSettingsModel
+import io.unthrottled.doki.icons.jetbrains.integrations.PluginService
+import io.unthrottled.doki.icons.jetbrains.settings.IconSettingsModel
 import io.unthrottled.doki.icons.jetbrains.svg.PatcherProvider
 import io.unthrottled.doki.icons.jetbrains.svg.noOptPatcherProvider
 import io.unthrottled.doki.icons.jetbrains.tools.AssetTools
@@ -37,6 +38,8 @@ class DokiTheme(
 
   val colors: Map<String, String>
     get() = dokiThemeInformation.colors
+
+  override fun toString(): String = this.listName
 }
 
 data class DokiThemePayload(
@@ -54,9 +57,9 @@ interface ThemeManagerListener : EventListener {
 class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Logging {
   companion object {
     const val DEFAULT_THEME_ID = "13adffd9-acbe-47af-8101-fa71269a4c5c" // Zero Two Obsidian
+    const val DEFAULT_THEME_LIST_NAME = "Franxx: Zero Two Dark Obsidian"// Zero Two Obsidian
     val TOPIC = Topic(ThemeManagerListener::class.java)
-    val instance: IconThemeManager
-      get() = ApplicationManager.getApplication().getService(IconThemeManager::class.java)
+    fun getInstance(): IconThemeManager = ApplicationManager.getApplication().getService(IconThemeManager::class.java)
   }
 
   private val connection = ApplicationManager.getApplication().messageBus.connect()
@@ -88,7 +91,7 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
     get() = getThemeById(DEFAULT_THEME_ID).get()
 
   val currentTheme: Optional<DokiThemePayload> =
-    if (Config.instance.syncWithDokiTheme) {
+    if (Config.getInstance().syncWithDokiTheme && PluginService.isDokiThemeInstalled()) {
       mapLAFToDokiTheme(LafManager.getInstance().currentUIThemeLookAndFeel)
     } else {
       userSetTheme
@@ -99,7 +102,7 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
     get() =
       LafManager.getInstance().installedThemes
         .firstOrNull { theme ->
-          theme.id == Config.instance.currentThemeId
+          theme.id == Config.getInstance().currentThemeId
         }.toOptional()
         .map { theme ->
           val themeId = theme.id
@@ -109,7 +112,7 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
             themeColorPatcher ?: noOptPatcherProvider,
           )
         }.or {
-          val themeId = Config.instance.currentThemeId
+          val themeId = Config.getInstance().currentThemeId
           DokiThemePayload(
             themeMap[themeId] ?: error("Expecting theme with ID $themeId to be present"),
             LafManager.getInstance().currentUIThemeLookAndFeel
@@ -186,10 +189,10 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
 
   override fun lookAndFeelChanged(source: LafManager) {
     val messageBus = ApplicationManager.getApplication().messageBus
-    if (Config.instance.syncWithDokiTheme) {
+    if (Config.getInstance().syncWithDokiTheme && PluginService.isDokiThemeInstalled()) {
       mapLAFToDokiTheme(source.currentUIThemeLookAndFeel)
         .map {
-          Config.instance.currentThemeId = it.dokiTheme.id
+          Config.getInstance().currentThemeId = it.dokiTheme.id
           it
         }.or {
           userSetTheme
@@ -208,26 +211,23 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
   fun getThemeById(currentThemeId: String): Optional<DokiTheme> = themeMap[currentThemeId].toOptional()
 
   override fun iconConfigUpdated(
-    previousState: IconSettingsModel,
     newState: IconSettingsModel,
   ) {
     val currentThemeId = newState.currentThemeId
-    if (previousState.currentThemeId != currentThemeId) {
-      LafManager.getInstance().installedThemes
-        .firstOrNull {
-          it.id == currentThemeId
-        }.toOptional()
-        .flatMap { uiTheme ->
-          getThemeById(currentThemeId)
-            .map { dokiTheme ->
-              DokiThemePayload(dokiTheme, buildThemeColorPatcher(uiTheme) ?: noOptPatcherProvider)
-            }
-        }
-        .ifPresent {
-          ApplicationManager.getApplication().messageBus
-            .syncPublisher(TOPIC)
-            .onDokiThemeActivated(it)
-        }
-    }
+    LafManager.getInstance().installedThemes
+      .firstOrNull {
+        it.id == currentThemeId
+      }.toOptional()
+      .flatMap { uiTheme ->
+        getThemeById(currentThemeId)
+          .map { dokiTheme ->
+            DokiThemePayload(dokiTheme, buildThemeColorPatcher(uiTheme) ?: noOptPatcherProvider)
+          }
+      }
+      .ifPresent {
+        ApplicationManager.getApplication().messageBus
+          .syncPublisher(TOPIC)
+          .onDokiThemeActivated(it)
+      }
   }
 }

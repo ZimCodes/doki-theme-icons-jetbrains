@@ -20,7 +20,7 @@ class IDEPluginInstallListener : DynamicPluginListener, Logging {
   override fun pluginLoaded(pluginDescriptor: IdeaPluginDescriptor) {
     if (pluginDescriptor.pluginId.idString == PLUGIN_ID) {
       ApplicationManager.getApplication().invokeLater(
-        { PluginMaster.instance.initializePlugin() },
+        { PluginMaster.getInstance().initializePlugin() },
         com.intellij.openapi.application.ModalityState.nonModal(),
       )
     }

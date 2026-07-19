@@ -6,10 +6,10 @@ import io.unthrottled.doki.icons.jetbrains.PluginMaster
 
 class ApplicationLifecycleListener : AppLifecycleListener, DumbAware {
   override fun appFrameCreated(commandLineArgs: MutableList<String>) {
-    PluginMaster.instance.initializePlugin()
+    PluginMaster.getInstance().initializePlugin()
   }
 
   override fun appClosing() {
-    PluginMaster.instance.dispose()
+    PluginMaster.getInstance().dispose()
   }
 }
