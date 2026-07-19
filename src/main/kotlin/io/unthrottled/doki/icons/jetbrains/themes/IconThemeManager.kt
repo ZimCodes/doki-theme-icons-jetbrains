@@ -49,15 +49,12 @@ data class DokiThemePayload(
 
 interface ThemeManagerListener : EventListener {
   fun onDokiThemeActivated(dokiThemePayload: DokiThemePayload)
-
-  fun onDokiThemeRemoved()
 }
 
 @Service
 class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Logging {
   companion object {
     const val DEFAULT_THEME_ID = "13adffd9-acbe-47af-8101-fa71269a4c5c" // Zero Two Obsidian
-    const val DEFAULT_THEME_LIST_NAME = "Franxx: Zero Two Dark Obsidian"// Zero Two Obsidian
     val TOPIC = Topic(ThemeManagerListener::class.java)
     fun getInstance(): IconThemeManager = ApplicationManager.getApplication().getService(IconThemeManager::class.java)
   }

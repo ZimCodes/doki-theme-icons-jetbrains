@@ -73,6 +73,5 @@ object LAFIconReplacementComponent : IconConfigListener, ThemeManagerListener {
     installLAFIcons()
   }
 
-  override fun onDokiThemeRemoved() {
-  }
+
 }

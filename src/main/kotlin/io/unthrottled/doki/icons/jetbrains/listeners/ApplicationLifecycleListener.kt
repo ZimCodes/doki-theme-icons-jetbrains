@@ -5,10 +5,6 @@ import com.intellij.openapi.project.DumbAware
 import io.unthrottled.doki.icons.jetbrains.PluginMaster
 
 class ApplicationLifecycleListener : AppLifecycleListener, DumbAware {
-  override fun appFrameCreated(commandLineArgs: MutableList<String>) {
-    PluginMaster.getInstance().initializePlugin()
-  }
-
   override fun appClosing() {
     PluginMaster.getInstance().dispose()
   }

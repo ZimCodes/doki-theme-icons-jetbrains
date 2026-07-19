@@ -4,7 +4,6 @@ import com.intellij.openapi.diagnostic.Logger
 import org.apache.commons.io.IOUtils
 import java.io.InputStream
 import java.util.Optional
-import java.util.stream.Stream
 
 fun runSafely(
   runner: () -> Unit,
@@ -28,8 +27,6 @@ fun <T> runSafelyWithResult(
 
 fun <T> T?.toOptional() = Optional.ofNullable(this)
 
-fun <T> T?.toStream(): Stream<T> = Stream.of(this)
-
 fun <T> Optional<T>.doOrElse(
   present: (T) -> Unit,
   notThere: () -> Unit,
@@ -52,17 +49,3 @@ fun InputStream.readAllTheBytes(): ByteArray = IOUtils.toByteArray(this)
 interface Logging
 
 fun <T : Logging> T.logger(): Logger = Logger.getInstance(this::class.java)
-
-inline fun <reified T> T.toArray(): Array<T> = arrayOf(this)
-
-inline fun <reified T> T.toList(): List<T> = listOf(this)
-
-fun <T, U> allOf(
-  o1: Optional<T>,
-  o2: Optional<U>,
-): Optional<Pair<T, U>> =
-  o1.flatMap { t ->
-    o2.map { u ->
-      Pair(t, u)
-    }
-  }

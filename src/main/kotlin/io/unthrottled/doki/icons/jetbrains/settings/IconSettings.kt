@@ -2,15 +2,10 @@ package io.unthrottled.doki.icons.jetbrains.settings
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.options.ConfigurationException
-import com.intellij.openapi.ui.ComboBox
 import io.unthrottled.doki.icons.jetbrains.config.Config
 import io.unthrottled.doki.icons.jetbrains.config.IconConfigListener.Companion.TOPIC
 import io.unthrottled.doki.icons.jetbrains.themes.DokiTheme
 import io.unthrottled.doki.icons.jetbrains.themes.IconThemeManager
-import org.jetbrains.annotations.UnknownNullability
-import java.util.*
-import javax.swing.DefaultComboBoxModel
-
 
 object IconSettings {
   const val SETTINGS_ID = "io.unthrottled.doki.icons.jetbrains.settings.ThemeSettings"
@@ -25,7 +20,6 @@ object IconSettings {
       isNamedFolderIcons = Config.getInstance().isNamedFolderIcons,
       isMyIcons = Config.getInstance().isMyIcons,
       currentThemeId = getDokiTheme().id,
-      currentThemeName = getDokiTheme().listName,
       syncWithDokiTheme = Config.getInstance().syncWithDokiTheme,
     )
 
@@ -37,7 +31,6 @@ object IconSettings {
       this.isGlyphIcon = model.isGlyphIcons
       this.isNamedFolderIcons = model.isNamedFolderIcons
       this.currentThemeId = model.currentThemeId
-      this.currentThemeName = getDokiTheme().listName
       this.syncWithDokiTheme = model.syncWithDokiTheme
       this.isMyIcons = model.isMyIcons
     }

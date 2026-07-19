@@ -4,10 +4,8 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
 import io.unthrottled.doki.icons.jetbrains.laf.LAFIconReplacementComponent
-import io.unthrottled.doki.icons.jetbrains.onboarding.UserOnBoarding
 import io.unthrottled.doki.icons.jetbrains.path.ExperimentalUIFixer
 import io.unthrottled.doki.icons.jetbrains.path.IconPathReplacementComponent
 import io.unthrottled.doki.icons.jetbrains.svg.ThemedSVGManager
@@ -35,14 +33,6 @@ class PluginMaster : ProjectManagerListener, Disposable, Logging {
     LAFIconReplacementComponent.initialize()
   }
 
-  fun handleProjectOpened(project: Project) {
-    registerListenersForProject(project)
-  }
-
-  private fun registerListenersForProject(project: Project) {
-    UserOnBoarding.attemptToPerformNewUpdateActions(project)
-  }
-
   override fun projectClosed(project: Project) {
     projectListeners[project.locationHash]?.dispose()
     projectListeners.remove(project.locationHash)
@@ -56,10 +46,6 @@ class PluginMaster : ProjectManagerListener, Disposable, Logging {
     projectListeners.forEach { (_, listeners) -> listeners.dispose() }
   }
 
-  fun initializePlugin() {
-    ProjectManager.getInstance().openProjects
-      .forEach { registerListenersForProject(it) }
-  }
 }
 
 internal data class ProjectListeners(

@@ -70,7 +70,7 @@ class ThemedSVGManager : ThemeManagerListener, Disposable, Logging {
           }
         }
       }
-    val patcherProviderClass = Class.forName("com.intellij.util.SVGLoader\$SvgElementColorPatcherProvider")
+    val patcherProviderClass = Class.forName($$"com.intellij.util.SVGLoader$SvgElementColorPatcherProvider")
     val proxiedSVGElementColorProvider =
       Proxy.newProxyInstance(
         patcherProviderClass.classLoader,
@@ -94,5 +94,4 @@ class ThemedSVGManager : ThemeManagerListener, Disposable, Logging {
     activateTheme(dokiThemePayload)
   }
 
-  override fun onDokiThemeRemoved() {}
 }

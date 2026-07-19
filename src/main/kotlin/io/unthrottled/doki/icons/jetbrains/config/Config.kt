@@ -18,31 +18,12 @@ class Config : SerializablePersistentStateComponent<Config.StateConfig>(StateCon
     fun getInstance(): Config = ApplicationManager.getApplication().getService(Config::class.java)
   }
 
-  var userId: String
-    get() = state.userId
-    set(value) {
-      updateState {
-        it.copy(userId = value)
-      }
-    }
-  var version: String
-    get() = state.version
-    set(value) {
-      updateState {
-        it.copy(version = value)
-      }
-    }
   var currentThemeId: String
     get() = state.currentThemeId
     set(value) {
       updateState {
         it.copy(currentThemeId = value)
       }
-    }
-  var currentThemeName: String
-    get() = state.currentThemeName
-    set(value) {
-      updateState { it.copy(currentThemeName = value) }
     }
   var isUIIcons: Boolean
     get() = state.isUIIcons
@@ -88,10 +69,7 @@ class Config : SerializablePersistentStateComponent<Config.StateConfig>(StateCon
     }
 
   data class StateConfig(
-    var userId: String = "",
-    var version: String = "",
     var currentThemeId: String = IconThemeManager.DEFAULT_THEME_ID,
-    var currentThemeName: String = IconThemeManager.DEFAULT_THEME_LIST_NAME,
     var isUIIcons: Boolean = true,
     var isNamedFileIcons: Boolean = true,
     var isGlyphIcon: Boolean = true,

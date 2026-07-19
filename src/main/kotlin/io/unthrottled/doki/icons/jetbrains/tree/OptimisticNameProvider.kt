@@ -8,7 +8,7 @@ import java.util.Optional
 fun Project.nameProvider(): OptimisticNameProvider = this.getService(OptimisticNameProvider::class.java)
 
 @Service(Service.Level.PROJECT)
-class OptimisticNameProvider() {
+class OptimisticNameProvider {
   private val priorityList = SchwiftyList<NamedIconMapping>()
 
   fun findMapping(fileName: String): Optional<NamedIconMapping> {
