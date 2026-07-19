@@ -2,40 +2,28 @@ package io.unthrottled.doki.build.plugin.tasks
 
 import com.google.gson.GsonBuilder
 import io.unthrottled.doki.build.jvm.models.AssetTemplateDefinition
-import io.unthrottled.doki.build.jvm.models.IconsAppDefinition
 import io.unthrottled.doki.build.jvm.models.MasterThemeDefinition
-import io.unthrottled.doki.build.jvm.tools.BuildFunctions
+import io.unthrottled.doki.build.jvm.tools.*
 import io.unthrottled.doki.build.jvm.tools.BuildFunctions.combineMaps
 import io.unthrottled.doki.build.jvm.tools.CommonConstructionFunctions.getAllDokiThemeDefinitions
-import io.unthrottled.doki.build.jvm.tools.ConstructableAssetSupplier
-import io.unthrottled.doki.build.jvm.tools.ConstructableAssetSupplierFactory
-import io.unthrottled.doki.build.jvm.tools.ConstructableTypes
-import io.unthrottled.doki.build.jvm.tools.DokiProduct
 import io.unthrottled.doki.build.jvm.tools.GroupToNameMapping.getLafNamePrefix
 import io.unthrottled.doki.build.jvm.tools.PathTools.cleanDirectory
 import io.unthrottled.doki.build.jvm.tools.PathTools.ensureDirectoryExists
 import io.unthrottled.doki.build.jvm.tools.PathTools.readJSONFromFile
 import io.unthrottled.doki.build.plugin.util.DokiTheme
 import io.unthrottled.doki.build.plugin.util.IconPathMapping
+import io.unthrottled.doki.build.plugin.util.IconsAppDefinition
+import org.gradle.api.DefaultTask
+import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.tasks.*
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths.get
 import java.nio.file.StandardCopyOption
 import java.nio.file.StandardOpenOption
 import java.util.stream.Collectors
-import org.gradle.api.DefaultTask
-import org.gradle.api.file.ConfigurableFileCollection
-import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.file.RegularFileProperty
-import org.gradle.api.tasks.CacheableTask
-import org.gradle.api.tasks.InputDirectory
-import org.gradle.api.tasks.InputFile
-import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.OutputDirectory
-import org.gradle.api.tasks.PathSensitive
-import org.gradle.api.tasks.PathSensitivity
-import org.gradle.api.tasks.TaskAction
 
 @CacheableTask
 abstract class BuildThemesTask : DefaultTask() {
