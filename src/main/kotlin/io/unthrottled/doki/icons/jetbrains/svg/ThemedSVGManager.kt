@@ -70,7 +70,12 @@ class ThemedSVGManager : ThemeManagerListener, Disposable, Logging {
           }
         }
       }
-    val patcherProviderClass = Class.forName($$"com.intellij.util.SVGLoader$SvgElementColorPatcherProvider")
+    val patcherProviderClass =
+      runSafelyWithResult({
+        Class.forName("com.intellij.ui.svg.SvgElementColorPatcherProvider")
+      }) {
+        Class.forName($$"com.intellij.util.SVGLoader$SvgElementColorPatcherProvider")
+      }
     val proxiedSVGElementColorProvider =
       Proxy.newProxyInstance(
         patcherProviderClass.classLoader,
@@ -78,7 +83,8 @@ class ThemedSVGManager : ThemeManagerListener, Disposable, Logging {
         patcherProxyHandler,
       )
     val svgLoaderClass = Class.forName("com.intellij.util.SVGLoader")
-    val setPatcher = svgLoaderClass.declaredMethods.firstOrNull { it.name == "setColorPatcherProvider" }
+    val setPatcher = svgLoaderClass.declaredMethods
+      .firstOrNull { it.name == "setColorPatcherProvider" || it.name == "setSvgElementColorPatcherProvider" }
     setPatcher?.invoke(null, proxiedSVGElementColorProvider)
 
     val svgClass = Class.forName("com.intellij.ui.svg.SvgKt")

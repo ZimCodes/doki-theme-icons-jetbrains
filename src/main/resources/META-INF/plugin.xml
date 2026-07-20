@@ -17,10 +17,6 @@
     <iconProvider implementation="io.unthrottled.doki.icons.jetbrains.tree.TreeNamedIconProvider" order="first"/>
   </extensions>
 
-  <actions>
-    <action id="io.unthrottled.doki.icons.jetbrains.actions.SetPatcherAction" class="io.unthrottled.doki.icons.jetbrains.actions.SetPatcherAction" text="Set Patcher" />
-  </actions>
-
   <applicationListeners>
     <listener class="io.unthrottled.doki.icons.jetbrains.listeners.ApplicationLifecycleListener"
               topic="com.intellij.ide.AppLifecycleListener"/>

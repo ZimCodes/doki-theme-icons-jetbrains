@@ -1,13 +1,12 @@
 package io.unthrottled.doki.icons.jetbrains.listeners
 
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManagerListener
 import io.unthrottled.doki.icons.jetbrains.PluginMaster
 import io.unthrottled.doki.icons.jetbrains.tools.Logging
 
 internal class ProjectListener :
   ProjectManagerListener, Logging {
-  override fun projectClosed(project: Project) {
-    PluginMaster.getInstance().projectClosed(project)
+  init {
+    PluginMaster.getInstance()
   }
 }

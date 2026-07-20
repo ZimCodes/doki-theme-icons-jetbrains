@@ -62,7 +62,6 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
   private val connection = ApplicationManager.getApplication().messageBus.connect()
 
   private val themeMap: Map<String, DokiTheme>
-  private val themeListNameMap: Map<String, DokiTheme>
 
   init {
     connection.subscribe(LafManagerListener.TOPIC, this)
@@ -80,7 +79,6 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
       }.orElseGet {
         emptyMap()
       }
-    themeListNameMap = themeMap.mapKeys { (id, dokiTheme) -> dokiTheme.listName }
   }
 
   fun init() {
@@ -89,8 +87,8 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
   val defaultTheme: DokiTheme
     get() = getThemeById(DEFAULT_THEME_ID).get()
 
-  val currentTheme: Optional<DokiThemePayload> =
-    if (Config.getInstance().syncWithDokiTheme && PluginService.isDokiThemeInstalled()) {
+  val currentTheme: Optional<DokiThemePayload>
+    get() = if (Config.getInstance().syncWithDokiTheme && PluginService.isDokiThemeInstalled()) {
       mapLAFToDokiTheme(LafManager.getInstance().currentUIThemeLookAndFeel)
     } else {
       userSetTheme
@@ -229,9 +227,9 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
           }
       }
       .ifPresent {
-        ApplicationManager.getApplication().messageBus
-          .syncPublisher(TOPIC)
-          .onDokiThemeActivated(it)
-      }
+      ApplicationManager.getApplication().messageBus
+        .syncPublisher(TOPIC)
+        .onDokiThemeActivated(it)
+    }
   }
 }

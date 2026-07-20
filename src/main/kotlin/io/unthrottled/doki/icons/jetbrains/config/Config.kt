@@ -74,7 +74,7 @@ class Config : SerializablePersistentStateComponent<Config.StateConfig>(StateCon
     var isNamedFileIcons: Boolean = true,
     var isGlyphIcon: Boolean = true,
     var isNamedFolderIcons: Boolean = true,
-    var isMyIcons: Boolean = false,
-    var syncWithDokiTheme: Boolean = true,
+    var isMyIcons: Boolean = true,
+    var syncWithDokiTheme: Boolean = false,
   )
 }

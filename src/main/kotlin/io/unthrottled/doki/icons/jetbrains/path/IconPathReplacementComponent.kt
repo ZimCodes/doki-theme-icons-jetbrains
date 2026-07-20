@@ -52,8 +52,6 @@ object IconPathReplacementComponent : IconConfigListener {
   }
 
   fun installComponents() {
-    ExperimentalUIFixer.fixExperimentalUI()
-
     iconInstallPacs.forEach { pak ->
       IconLoader.removePathPatcher(pak.iconPatcher)
       if (pak.iconConfigExtractor(Config.getInstance())) {
@@ -87,7 +85,6 @@ object IconPathReplacementComponent : IconConfigListener {
   }
 
   private fun refresh() {
-    ExperimentalUIFixer.fixExperimentalUI()
     val app = ApplicationManager.getApplication()
     app.invokeLater(
       {
