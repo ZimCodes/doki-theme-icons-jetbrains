@@ -25,14 +25,17 @@ class IconSettingsView(private val model: IconSettingsModel = IconSettings.creat
   override fun getDisplayName(): String = IconSettings.ICON_SETTINGS_DISPLAY_NAME
 
   private fun createIconPanel(): DialogPanel = panel {
-    row(PluginMessageBundle.message("settings.general.current.theme")) {
-      comboBox(IconSettings.getThemeList()).bindItem(
-        { IconSettings.getDokiTheme(model.currentThemeId) },
-        { model.currentThemeId = it?.id ?: IconSettings.getDokiTheme().id })
-        .enabledIf(syncWithDokiThemeCheckbox.selected.not())
-    }
     row {
-      checkBox(PluginMessageBundle.message("settings.general.sync.with.theme")).bindSelected(model::syncWithDokiTheme)
+      syncWithDokiThemeCheckbox = checkBox(PluginMessageBundle.message("settings.general.sync.with.theme")).bindSelected(model::syncWithDokiTheme)
+    }
+    row(PluginMessageBundle.message("settings.general.current.theme")) {
+      comboBox(IconSettings.getThemeListNames()).bindItem(
+        { IconSettings.getDokiThemeById(model.currentThemeId).listName },
+        {
+          model.currentThemeId =
+            it?.let { IconSettings.getDokiThemeByName(it).id } ?: IconSettings.getDefaultDokiTheme().id
+        })
+        .enabledIf(syncWithDokiThemeCheckbox.selected.not())
     }
     group(PluginMessageBundle.message("settings.general.icons.settings")) {
       row {
@@ -68,7 +71,12 @@ class IconSettingsView(private val model: IconSettingsModel = IconSettings.creat
   override fun isModified(): Boolean = iconPanel.isModified()
 
   override fun apply() {
+    iconPanel.apply()
     IconSettings.apply(model)
+  }
+
+  override fun reset() {
+    iconPanel.reset()
   }
 
 }

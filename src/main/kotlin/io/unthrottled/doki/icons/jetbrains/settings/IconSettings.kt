@@ -12,16 +12,18 @@ object IconSettings {
   const val ICON_SETTINGS_DISPLAY_NAME = "Doki Theme Icons Settings"
 
   @JvmStatic
-  fun createSettingsModule(): IconSettingsModel =
-    IconSettingsModel(
-      isUIIcons = Config.getInstance().isUIIcons,
-      isNamedFileIcons = Config.getInstance().isNamedFileIcons,
-      isGlyphIcons = Config.getInstance().isGlyphIcon,
-      isNamedFolderIcons = Config.getInstance().isNamedFolderIcons,
-      isMyIcons = Config.getInstance().isMyIcons,
-      currentThemeId = getDokiTheme().id,
-      syncWithDokiTheme = Config.getInstance().syncWithDokiTheme,
+  fun createSettingsModule(): IconSettingsModel {
+    val config = Config.getInstance()
+    return IconSettingsModel(
+      isUIIcons = config.isUIIcons,
+      isNamedFileIcons = config.isNamedFileIcons,
+      isGlyphIcons = config.isGlyphIcon,
+      isNamedFolderIcons = config.isNamedFolderIcons,
+      isMyIcons = config.isMyIcons,
+      currentThemeId = config.currentThemeId,
+      syncWithDokiTheme = config.syncWithDokiTheme,
     )
+  }
 
   @Throws(ConfigurationException::class)
   fun apply(model: IconSettingsModel) {
@@ -34,20 +36,29 @@ object IconSettings {
       this.syncWithDokiTheme = model.syncWithDokiTheme
       this.isMyIcons = model.isMyIcons
     }
-
     ApplicationManager.getApplication()
       .messageBus
       .syncPublisher(TOPIC)
       .iconConfigUpdated(model)
   }
 
-  fun getDokiTheme(id: String? = null): DokiTheme =
+  fun getDokiThemeById(id: String? = null): DokiTheme =
     IconThemeManager.getInstance().getThemeById(
       id?.let { id } ?: Config.getInstance().currentThemeId,
     ).orElseGet {
-      IconThemeManager.getInstance().defaultTheme
+      getDefaultDokiTheme()
     }
 
-  fun getThemeList() = IconThemeManager.getInstance().allThemes
+  fun getDefaultDokiTheme(): DokiTheme = IconThemeManager.getInstance().defaultTheme
+
+  fun getDokiThemeByName(listName: String?): DokiTheme = IconThemeManager.getInstance().getThemeByListName(
+    listName?.let { listName } ?: Config.getInstance().currentThemeId,
+  ).orElseGet {
+    IconThemeManager.getInstance().defaultTheme
+  }
+
+
+  fun getThemeListNames(): List<String> = IconThemeManager.getInstance().allThemes
     .sortedBy { theme -> theme.listName }
+    .map { dokiTheme -> dokiTheme.listName }
 }

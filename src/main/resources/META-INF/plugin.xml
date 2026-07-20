@@ -1,4 +1,3 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin require-restart="true">
   <id>io.unthrottled.doki.icons</id>
   <name>Doki Theme Icons</name>
@@ -11,18 +10,15 @@
   <description>A nice mix of cool and cute icons to compliment your favorite theme!</description>
 
   <extensions defaultExtensionNs="com.intellij">
-    <applicationConfigurable id="io.unthrottled.doki.icons.jetbrains.settings.ThemeSettings"
+    <applicationConfigurable id="io.unthrottled.doki.icons.jetbrains.settings.IconSettingsView"
                              instance="io.unthrottled.doki.icons.jetbrains.settings.IconSettingsView"
                              displayName="Doki Theme Icons"
                              groupId="appearance"/>
     <iconProvider implementation="io.unthrottled.doki.icons.jetbrains.tree.TreeNamedIconProvider" order="first"/>
-    <notificationGroup displayType="BALLOON" id="Doki Theme Icons Updates" isLogByDefault="false"
-                       toolWindowId="Doki Theme Icons Updates"/>
   </extensions>
 
   <actions>
     <action id="io.unthrottled.doki.icons.jetbrains.actions.SetPatcherAction" class="io.unthrottled.doki.icons.jetbrains.actions.SetPatcherAction" text="Set Patcher" />
-    <action id="io.unthrottled.doki.icons.jetbrains.actions.ShowUpdateNotification" class="io.unthrottled.doki.icons.jetbrains.actions.ShowUpdateNotification" text="Show Update Notification" />
   </actions>
 
   <applicationListeners>

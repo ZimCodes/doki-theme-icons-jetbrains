@@ -62,6 +62,7 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
   private val connection = ApplicationManager.getApplication().messageBus.connect()
 
   private val themeMap: Map<String, DokiTheme>
+  private val themeListNameMap: Map<String, DokiTheme>
 
   init {
     connection.subscribe(LafManagerListener.TOPIC, this)
@@ -79,6 +80,7 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
       }.orElseGet {
         emptyMap()
       }
+    themeListNameMap = themeMap.mapKeys { (id, dokiTheme) -> dokiTheme.listName }
   }
 
   fun init() {
@@ -206,6 +208,11 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
   }
 
   fun getThemeById(currentThemeId: String): Optional<DokiTheme> = themeMap[currentThemeId].toOptional()
+  fun getThemeByListName(currentThemeListName: String): Optional<DokiTheme> =
+    themeMap.asSequence()
+      .find { (_, dokiTheme) -> currentThemeListName == dokiTheme.listName }
+      .toOptional()
+      .map { (_, dokiTheme) -> dokiTheme }
 
   override fun iconConfigUpdated(
     newState: IconSettingsModel,
