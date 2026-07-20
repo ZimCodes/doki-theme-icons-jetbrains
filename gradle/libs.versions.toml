@@ -2,9 +2,11 @@
 commons-io = "2.22.0"
 kotlin = "2.4.20-Beta1"
 intellij-platform = "2.18.1"
+javassist = "3.32.0-GA"
 
 [libraries]
 commons-io = {module = "commons-io:commons-io", version.ref = "commons-io"}
+javassist = {module = "org.javassist:javassist", version.ref = "javassist"}
 
 [plugins]
 kotlin = {id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin"}
