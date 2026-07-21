@@ -1,8 +1,10 @@
+import org.jetbrains.changelog.date
+
 plugins {
   id("io.unthrottled.doki.build.plugin.dokibuildplugin")
-  id("java") // Java support
   alias(libs.plugins.kotlin)
   alias(libs.plugins.intellij.platform)
+  alias(libs.plugins.changelog)
 }
 
 group = providers.gradleProperty("pluginGroup").get()
@@ -46,7 +48,7 @@ intellijPlatform {
   pluginConfiguration {
     name = providers.gradleProperty("pluginName")
     version = providers.gradleProperty("pluginVersion")
-
+    description = provider { "A nice mix of cool and cute icons to compliment your favorite theme!" }
     ideaVersion {
       sinceBuild = providers.gradleProperty("pluginSinceBuild")
       untilBuild = providers.gradleProperty("pluginUntilBuild")
@@ -74,7 +76,18 @@ intellijPlatform {
     }
   }
 }
+changelog {
+  introduction = provider {
+    """
+    All notable changes to this project will be documented in this file.
 
+    The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+    and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+  """.trimIndent()
+  }
+  repositoryUrl = "https://github.com/ZimCodes/doki-theme-jetbrains"
+  header = "${version.get()} - ${date()}"
+}
 tasks {
   wrapper {
     gradleVersion = providers.gradleProperty("gradleVersion").get()

@@ -64,5 +64,22 @@ class DokiBuildPlugin : Plugin<Project> {
       }
       commandExecMap.put(MultiExecTask.OSType.AUTO, commands)
     }
+    project.tasks.register<MultiExecTask>("updateRepos") {
+      description = "Gets the latest changes made to all repo dependencies from remote repo"
+      val pullCMD = "git pull origin main"
+      commandExecMap.put(
+        MultiExecTask.OSType.AUTO,
+        listOf(
+          "cd doki-build-source",
+          pullCMD,
+          "cd ../doki-build-source-jvm",
+          pullCMD,
+          "cd ../masterThemes",
+          pullCMD,
+          "cd ../iconSource",
+          pullCMD
+        )
+      )
+    }
   }
 }
