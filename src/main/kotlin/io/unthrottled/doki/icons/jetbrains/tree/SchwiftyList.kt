@@ -20,7 +20,7 @@ internal class SchwiftyNode<T>(
       me.parent = grandParent
       grandParent?.child = me
 
-      myParent.parent = me // I am become my parent
+      myParent.parent = me // I have become my parent
       me.child = myParent
 
       myChild?.parent = myParent

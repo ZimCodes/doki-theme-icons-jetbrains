@@ -30,7 +30,7 @@ class ThemedSVGManager : ThemeManagerListener, Disposable, Logging {
   }
 
   fun initialize() {
-    IconThemeManager.instance.currentTheme
+    IconThemeManager.getInstance().currentTheme
       .ifPresent {
         activateTheme(it)
       }
@@ -70,7 +70,12 @@ class ThemedSVGManager : ThemeManagerListener, Disposable, Logging {
           }
         }
       }
-    val patcherProviderClass = Class.forName("com.intellij.util.SVGLoader\$SvgElementColorPatcherProvider")
+    val patcherProviderClass =
+      runSafelyWithResult({
+        Class.forName("com.intellij.ui.svg.SvgElementColorPatcherProvider")
+      }) {
+        Class.forName($$"com.intellij.util.SVGLoader$SvgElementColorPatcherProvider")
+      }
     val proxiedSVGElementColorProvider =
       Proxy.newProxyInstance(
         patcherProviderClass.classLoader,
@@ -78,7 +83,8 @@ class ThemedSVGManager : ThemeManagerListener, Disposable, Logging {
         patcherProxyHandler,
       )
     val svgLoaderClass = Class.forName("com.intellij.util.SVGLoader")
-    val setPatcher = svgLoaderClass.declaredMethods.firstOrNull { it.name == "setColorPatcherProvider" }
+    val setPatcher = svgLoaderClass.declaredMethods
+      .firstOrNull { it.name == "setColorPatcherProvider" || it.name == "setSvgElementColorPatcherProvider" }
     setPatcher?.invoke(null, proxiedSVGElementColorProvider)
 
     val svgClass = Class.forName("com.intellij.ui.svg.SvgKt")
@@ -94,5 +100,4 @@ class ThemedSVGManager : ThemeManagerListener, Disposable, Logging {
     activateTheme(dokiThemePayload)
   }
 
-  override fun onDokiThemeRemoved() {}
 }

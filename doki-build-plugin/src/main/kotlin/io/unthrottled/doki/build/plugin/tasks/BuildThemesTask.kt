@@ -1,62 +1,36 @@
-package io.unthrottled.doki.build.plugin
+package io.unthrottled.doki.build.plugin.tasks
 
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import io.unthrottled.doki.build.jvm.models.AssetTemplateDefinition
-import io.unthrottled.doki.build.jvm.models.IconsAppDefinition
 import io.unthrottled.doki.build.jvm.models.MasterThemeDefinition
-import io.unthrottled.doki.build.jvm.tools.BuildFunctions
+import io.unthrottled.doki.build.jvm.tools.*
 import io.unthrottled.doki.build.jvm.tools.BuildFunctions.combineMaps
 import io.unthrottled.doki.build.jvm.tools.CommonConstructionFunctions.getAllDokiThemeDefinitions
-import io.unthrottled.doki.build.jvm.tools.ConstructableAssetSupplier
-import io.unthrottled.doki.build.jvm.tools.ConstructableAssetSupplierFactory
-import io.unthrottled.doki.build.jvm.tools.ConstructableTypes
-import io.unthrottled.doki.build.jvm.tools.DokiProduct
 import io.unthrottled.doki.build.jvm.tools.GroupToNameMapping.getLafNamePrefix
 import io.unthrottled.doki.build.jvm.tools.PathTools.cleanDirectory
 import io.unthrottled.doki.build.jvm.tools.PathTools.ensureDirectoryExists
 import io.unthrottled.doki.build.jvm.tools.PathTools.readJSONFromFile
+import io.unthrottled.doki.build.plugin.util.DokiTheme
+import io.unthrottled.doki.build.plugin.util.IconPathMapping
+import io.unthrottled.doki.build.plugin.util.IconsAppDefinition
+import org.gradle.api.DefaultTask
+import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.tasks.*
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths.get
 import java.nio.file.StandardCopyOption
 import java.nio.file.StandardOpenOption
 import java.util.stream.Collectors
-import org.gradle.api.DefaultTask
-import org.gradle.api.file.ConfigurableFileCollection
-import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.file.RegularFileProperty
-import org.gradle.api.tasks.CacheableTask
-import org.gradle.api.tasks.InputDirectory
-import org.gradle.api.tasks.InputFile
-import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.OutputDirectory
-import org.gradle.api.tasks.PathSensitive
-import org.gradle.api.tasks.PathSensitivity
-import org.gradle.api.tasks.TaskAction
-
-// todo figure out how to share.
-data class DokiTheme(
-  val id: String,
-  val name: String,
-  val displayName: String,
-  val group: String,
-  val listName: String,
-  val colors: Map<String, String>,
-)
-
-data class IconPathMapping(
-  val iconName: String,
-  val isOddBall: Boolean?,
-)
 
 @CacheableTask
 abstract class BuildThemesTask : DefaultTask() {
 
   @get:InputDirectory
   @get:PathSensitive(PathSensitivity.RELATIVE)
-  abstract val buildSourceAssetDirectory: DirectoryProperty
+  abstract val dokiPluginAssetDirectory: DirectoryProperty
 
   @get:InputDirectory
   @get:PathSensitive(PathSensitivity.RELATIVE)
@@ -97,17 +71,17 @@ abstract class BuildThemesTask : DefaultTask() {
 
   @TaskAction
   fun run() {
-    val buildSourceAssetDirectory = buildSourceAssetDirectory.get().asFile.toPath()
+    val pluginAssetDirectory = dokiPluginAssetDirectory.get().asFile.toPath()
     val masterThemesDirectory = masterThemesDirectory.get().asFile.toPath()
     val constructableAssetSupplier =
       ConstructableAssetSupplierFactory.createCommonAssetsTemplate(
-        buildSourceAssetDirectory,
+        pluginAssetDirectory,
         masterThemesDirectory
       )
 
     cleanDirectory(getGenerateResourcesDirectory())
 
-    val jetbrainsIconsThemeDirectory = get(buildSourceAssetDirectory.toString(),"themes")
+    val jetbrainsIconsThemeDirectory = get(pluginAssetDirectory.toString(),"themes")
 
     val allDokiThemeDefinitions = getAllDokiThemeDefinitions(
       DokiProduct.ICONS,
@@ -154,9 +128,9 @@ abstract class BuildThemesTask : DefaultTask() {
     ensureDirectoryExists(iconsDirectory)
     cleanDirectory(iconsDirectory)
 
-    val allUsedIcons = resourceMappingFiles.map { it.toPath() }.flatMap {
+    val allUsedIcons = resourceMappingFiles.asSequence().map { it.toPath() }.flatMap {
       readJSONFromFile(it,
-      object: TypeToken<List<IconPathMapping>>(){}
+      object: com.google.gson.reflect.TypeToken<List<IconPathMapping>>(){}
       )
     }.filter { it.isOddBall != true }
       .map { it.iconName }
@@ -165,7 +139,7 @@ abstract class BuildThemesTask : DefaultTask() {
     allUsedIcons.addAll(
       readJSONFromFile(
         specialUsedIconsMapping.get().asFile.toPath(),
-        object : TypeToken<List<String>>() {}
+        object : com.google.gson.reflect.TypeToken<List<String>>() {}
       )
     )
 

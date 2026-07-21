@@ -5,7 +5,7 @@ import com.intellij.util.ui.LafIconLookup
 import icons.DokiThemeIconz
 import io.unthrottled.doki.icons.jetbrains.config.Config
 import io.unthrottled.doki.icons.jetbrains.config.IconConfigListener
-import io.unthrottled.doki.icons.jetbrains.config.IconSettingsModel
+import io.unthrottled.doki.icons.jetbrains.settings.IconSettingsModel
 import io.unthrottled.doki.icons.jetbrains.themes.DokiThemePayload
 import io.unthrottled.doki.icons.jetbrains.themes.IconThemeManager
 import io.unthrottled.doki.icons.jetbrains.themes.ThemeManagerListener
@@ -25,7 +25,7 @@ object LAFIconReplacementComponent : IconConfigListener, ThemeManagerListener {
   }
 
   private fun installLAFIcons() {
-    if (!Config.instance.isUIIcons) {
+    if (!Config.getInstance().isUIIcons) {
       return
     }
     setTreeIcons(
@@ -49,23 +49,18 @@ object LAFIconReplacementComponent : IconConfigListener, ThemeManagerListener {
   }
 
 
-
   fun dispose() {
     connection.dispose()
   }
 
   override fun iconConfigUpdated(
-    previousState: IconSettingsModel,
-    newState: IconSettingsModel,
-  ) {
-    if (newState.isUIIcons != previousState.isUIIcons) {
-      if (newState.isUIIcons) {
-        installLAFIcons()
-      } else {
-        removeLAFIcons()
-      }
-    }
+    newState: IconSettingsModel
+  ) = if (newState.isUIIcons) {
+    installLAFIcons()
+  } else {
+    removeLAFIcons()
   }
+
 
   private fun removeLAFIcons() {
     setTreeIcons(
@@ -78,6 +73,5 @@ object LAFIconReplacementComponent : IconConfigListener, ThemeManagerListener {
     installLAFIcons()
   }
 
-  override fun onDokiThemeRemoved() {
-  }
+
 }

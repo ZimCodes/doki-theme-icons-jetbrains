@@ -1,4 +1,3 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin require-restart="true">
   <id>io.unthrottled.doki.icons</id>
   <name>Doki Theme Icons</name>
@@ -8,28 +7,15 @@
   <depends>com.intellij.modules.platform</depends>
   <depends optional="true" config-file="io.unthrottled.doki.icons-io.unthrottled.doki.theme.xml">io.acari.DDLCTheme
   </depends>
-  <description>A nice mix of cool and cute icons to compliment your favorite theme!</description>
-
   <extensions defaultExtensionNs="com.intellij">
-    <applicationConfigurable id="io.unthrottled.doki.icons.jetbrains.settings.ThemeSettings"
-                             instance="io.unthrottled.doki.icons.jetbrains.settings.IconSettingsUI"
+    <applicationConfigurable id="io.unthrottled.doki.icons.jetbrains.settings.IconSettingsView"
+                             instance="io.unthrottled.doki.icons.jetbrains.settings.IconSettingsView"
                              displayName="Doki Theme Icons"
                              groupId="appearance"/>
-    <applicationService serviceImplementation="io.unthrottled.doki.icons.jetbrains.config.Config"/>
     <iconProvider implementation="io.unthrottled.doki.icons.jetbrains.tree.TreeNamedIconProvider" order="first"/>
-    <notificationGroup displayType="BALLOON" id="Doki Theme Icons Updates" isLogByDefault="false"
-                       toolWindowId="Doki Theme Icons Updates"/>
-    <postStartupActivity implementation="io.unthrottled.doki.icons.jetbrains.listeners.PluginPostStartUpActivity"/>
   </extensions>
 
-  <actions>
-    <action id="io.unthrottled.doki.icons.jetbrains.actions.SetPatcherAction" class="io.unthrottled.doki.icons.jetbrains.actions.SetPatcherAction" text="Set Patcher" />
-    <action id="io.unthrottled.doki.icons.jetbrains.actions.ShowUpdateNotification" class="io.unthrottled.doki.icons.jetbrains.actions.ShowUpdateNotification" text="Show Update Notification" />
-  </actions>
-
   <applicationListeners>
-    <listener class="io.unthrottled.doki.icons.jetbrains.listeners.IDEPluginInstallListener"
-              topic="com.intellij.ide.plugins.DynamicPluginListener"/>
     <listener class="io.unthrottled.doki.icons.jetbrains.listeners.ApplicationLifecycleListener"
               topic="com.intellij.ide.AppLifecycleListener"/>
     <listener class="io.unthrottled.doki.icons.jetbrains.listeners.ProjectListener"

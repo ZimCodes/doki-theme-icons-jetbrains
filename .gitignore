@@ -17,7 +17,8 @@ out/
 
 # Gradle
 .gradle/
-build/
+/build/
+/doki-build-plugin/build/
 classes/
 
 #gradle.properties
@@ -28,9 +29,7 @@ masterThemes/
 .qodana/
 
 .gradle
-.idea
 .qodana
-build
 tmp
 .intellijPlatform/
 .kotlin

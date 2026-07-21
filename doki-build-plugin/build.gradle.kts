@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
   implementation("io.unthrottled.doki.build.jvm:doki-build-source-jvm:88.0.7")
-  implementation("org.jsoup:jsoup:1.21.2")
+  implementation("org.jsoup:jsoup:1.22.2")
 }
 
 gradlePlugin {
