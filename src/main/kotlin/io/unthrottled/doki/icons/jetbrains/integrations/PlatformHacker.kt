@@ -10,7 +10,7 @@ import javassist.expr.ExprEditor
 import javassist.expr.MethodCall
 
 object PlatformHacker : Logging {
-  init {
+  fun init() {
     IconPathReplacementComponent.installComponents()
     hackPlatform()
   }
@@ -19,15 +19,7 @@ object PlatformHacker : Logging {
     fixEXPUIButton()
     fixEXPUIDefaultButton()
     fixEXPUIRunWidget()
-    fixEXPUIStopButton()
   }
-
-  private fun fixEXPUIStopButton() = fixEXPUI(
-    "com.intellij.execution.ui.RunState",
-    "com.intellij.execution.ui.StopWithDropDownAction",
-    "update",
-    "fixStopButton"
-  )
 
   private fun fixEXPUIRunWidget() {
     val fixName = "fixRunWidget"

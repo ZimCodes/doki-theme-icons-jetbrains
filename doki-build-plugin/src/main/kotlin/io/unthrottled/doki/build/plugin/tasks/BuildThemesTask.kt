@@ -5,11 +5,12 @@ import io.unthrottled.doki.build.jvm.models.AssetTemplateDefinition
 import io.unthrottled.doki.build.jvm.models.MasterThemeDefinition
 import io.unthrottled.doki.build.jvm.tools.*
 import io.unthrottled.doki.build.jvm.tools.BuildFunctions.combineMaps
-import io.unthrottled.doki.build.jvm.tools.CommonConstructionFunctions.getAllDokiThemeDefinitions
 import io.unthrottled.doki.build.jvm.tools.GroupToNameMapping.getLafNamePrefix
 import io.unthrottled.doki.build.jvm.tools.PathTools.cleanDirectory
 import io.unthrottled.doki.build.jvm.tools.PathTools.ensureDirectoryExists
 import io.unthrottled.doki.build.jvm.tools.PathTools.readJSONFromFile
+import io.unthrottled.doki.build.plugin.IconType
+import io.unthrottled.doki.build.plugin.util.ConstructionFunctions.getAllDokiThemeDefinitions
 import io.unthrottled.doki.build.plugin.util.DokiTheme
 import io.unthrottled.doki.build.plugin.util.IconPathMapping
 import io.unthrottled.doki.build.plugin.util.IconsAppDefinition
@@ -17,6 +18,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.*
 import java.nio.file.Files
 import java.nio.file.Path
@@ -27,6 +29,9 @@ import java.util.stream.Collectors
 
 @CacheableTask
 abstract class BuildThemesTask : DefaultTask() {
+
+  @get:Input
+  abstract val iconType: Property<IconType>
 
   @get:InputDirectory
   @get:PathSensitive(PathSensitivity.RELATIVE)
@@ -71,6 +76,7 @@ abstract class BuildThemesTask : DefaultTask() {
 
   @TaskAction
   fun run() {
+    val myIconType = iconType.get()
     val pluginAssetDirectory = dokiPluginAssetDirectory.get().asFile.toPath()
     val masterThemesDirectory = masterThemesDirectory.get().asFile.toPath()
     val constructableAssetSupplier =
@@ -81,10 +87,11 @@ abstract class BuildThemesTask : DefaultTask() {
 
     cleanDirectory(getGenerateResourcesDirectory())
 
-    val jetbrainsIconsThemeDirectory = get(pluginAssetDirectory.toString(),"themes")
+    val jetbrainsIconsThemeDirectory = get(pluginAssetDirectory.toString(), "themes")
 
     val allDokiThemeDefinitions = getAllDokiThemeDefinitions(
       DokiProduct.ICONS,
+      myIconType,
       jetbrainsIconsThemeDirectory,
       masterThemesDirectory,
       IconsAppDefinition::class.java
@@ -129,8 +136,9 @@ abstract class BuildThemesTask : DefaultTask() {
     cleanDirectory(iconsDirectory)
 
     val allUsedIcons = resourceMappingFiles.asSequence().map { it.toPath() }.flatMap {
-      readJSONFromFile(it,
-      object: com.google.gson.reflect.TypeToken<List<IconPathMapping>>(){}
+      readJSONFromFile(
+        it,
+        object : com.google.gson.reflect.TypeToken<List<IconPathMapping>>() {}
       )
     }.filter { it.isOddBall != true }
       .map { it.iconName }

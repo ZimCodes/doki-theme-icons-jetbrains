@@ -1,0 +1,50 @@
+# New Custom Color 
+
+> Do not like the color scheme for an existing doki theme?
+> Want to make your own color icon variant for a doki theme? This is the place!
+
+In order to submit a color scheme, you must provide a proof of concept. Follow the steps below to achieve this. If you
+haven't done already, [set up your development environment](../CONTRIBUTING.md#setup).
+
+## Customizing Colors
+
+`masterThemes/definitions` harbors all color definitions for a doki theme.
+
+1. **Navigate** to `masterThemes/definitions`.
+2. **Create a copy** of the doki theme, `*.master.definition.json`, you would like to modify and place it in the same
+   folder as the original.
+3. **Rename** the copied file according to the following rules:
+
+- File name _must_ end with `custom.master.definition.json`.
+- `.` must be used in place of spaces. Ex: `kiki.takagi.cool.theme.custom.master.definition.json`
+- File name must **not** be the same name as the original
+
+4. Now open the file and change the following values:
+
+- `name`: The name of your doki color variant
+- `displayName`: The name shown to users
+- `author`: Your name
+- `colors`: This is where you customize your doki theme colors. Replace any `#hexadecimal` color with your own!
+
+## Build Themes
+
+> This step is completely optional. Why? Because this step is executed *automatically* if you run the last step,
+> [Publish Plugin](#publish-plugin).
+
+This step includes:
+
+- Generating a `plugin.xml`
+- Generating doki theme templates for how to build each doki theme
+- Building your custom theme (s)
+- Relocating your custom theme (s) to `src/main/resources/META-INF`
+- Specifying where to find your custom theme (s) in `plugin.xml`
+
+To automate this, use the run configuration, `build themes [custom]`.
+
+## Publish Plugin
+
+Although the name says *Publish*, you're actually just building the plugin now.
+
+Use run configuration, `create plugin [custom]`, to build the plugin.
+
+When finished, your newly created plugin can be found at `build/distributions/`!

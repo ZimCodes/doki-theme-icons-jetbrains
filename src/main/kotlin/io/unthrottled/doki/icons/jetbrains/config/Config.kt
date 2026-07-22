@@ -5,7 +5,6 @@ import com.intellij.openapi.components.SerializablePersistentStateComponent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
-import io.unthrottled.doki.icons.jetbrains.themes.IconThemeManager
 
 @Service
 @State(
@@ -69,7 +68,7 @@ class Config : SerializablePersistentStateComponent<Config.StateConfig>(StateCon
     }
 
   data class StateConfig(
-    var currentThemeId: String = IconThemeManager.DEFAULT_THEME_ID,
+    var currentThemeId: String = "",
     var isUIIcons: Boolean = true,
     var isNamedFileIcons: Boolean = true,
     var isGlyphIcon: Boolean = true,

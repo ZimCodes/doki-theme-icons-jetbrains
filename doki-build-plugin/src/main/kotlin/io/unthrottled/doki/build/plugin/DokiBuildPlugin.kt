@@ -1,5 +1,6 @@
 package io.unthrottled.doki.build.plugin
 
+import io.unthrottled.doki.build.plugin.tasks.BuildPluginXmlTask
 import io.unthrottled.doki.build.plugin.tasks.BuildThemesTask
 import io.unthrottled.doki.build.plugin.tasks.MultiExecTask
 import io.unthrottled.doki.build.plugin.tasks.PatchHTMLTask
@@ -7,9 +8,34 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.register
 
+enum class IconType {
+  ORIGINAL, CUSTOM;
+
+  val lowercase: String
+    get() = this.name.lowercase()
+  val titlecase: String
+    get() = this.lowercase.replaceFirstChar { it.titlecase() }
+}
+
 class DokiBuildPlugin : Plugin<Project> {
   override fun apply(project: Project) {
+    val iconTypeProp = when (project.findProperty("type")) {
+      "custom" -> IconType.CUSTOM
+      else -> IconType.ORIGINAL
+    }
+    project.tasks.register<BuildPluginXmlTask>("buildPluginXml") {
+      pluginId.set("io.unthrottled.doki.icons")
+      pluginName.set("Doki Icons")
+      iconType.set(iconTypeProp)
+      assetPluginXml.set(project.layout.projectDirectory.file("doki-build-plugin/assets/plugin.xml"))
+      resourcePluginXml.set(project.layout.projectDirectory.file("src/main/resources/META-INF/plugin.xml"))
+    }
     project.tasks.register<BuildThemesTask>("buildThemes") {
+      dependsOn("buildPluginXml")
+      if (iconTypeProp == IconType.CUSTOM){
+        dependsOn("genCustomIconTemplate")
+      }
+      iconType.set(iconTypeProp)
       // buildSrc
       dokiPluginAssetDirectory.set(project.layout.projectDirectory.dir("doki-build-plugin/assets"))
       specialUsedIconsMapping.set(dokiPluginAssetDirectory.file("templates/specialUsedIcons.json"))
@@ -46,6 +72,12 @@ class DokiBuildPlugin : Plugin<Project> {
         )
       )
       startDirectory.set(project.layout.projectDirectory)
+    }
+    project.tasks.register<MultiExecTask>("genCustomIconTemplate") {
+      description = "Generate icon templates for custom doki themes."
+      mustRunAfter("buildPluginXml")
+      dependsOn("compileJava","compileKotlin","generateManifest")
+      commandExecMap.put(MultiExecTask.OSType.AUTO, listOf("cd masterThemes", "yarn generateCustomIconsTemplate"))
     }
     val masterThemeDir = project.layout.projectDirectory.dir("masterThemes")
     project.tasks.register<MultiExecTask>("getRepos") {

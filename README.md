@@ -93,7 +93,7 @@ Some ways to contribute:
   - Here's an [Icon TODO List](https://github.com/doki-theme/doki-theme-icons/blob/main/todo) created by Unthrottled which includes icons to be added in future versions.
 - Add cool new features 
 - Update existing themes and icons providing that doki vibe
-- Create a new theme entirely
+- **NEW**: Create your own custom icon color schemes. See [Custom Icon Colors]() 
 
 ---
 
