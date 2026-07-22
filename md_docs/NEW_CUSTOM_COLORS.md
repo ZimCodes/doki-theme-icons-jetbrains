@@ -41,10 +41,12 @@ This step includes:
 
 To automate this, use the run configuration, `build themes [custom]`.
 
-## Publish Plugin
-
-Although the name says *Publish*, you're actually just building the plugin now.
+## Create Plugin
 
 Use run configuration, `create plugin [custom]`, to build the plugin.
 
 When finished, your newly created plugin can be found at `build/distributions/`!
+
+## Share Plugin
+
+You can share your plugin in the [Custom Color Schemes Discussion](https://github.com/ZimCodes/doki-theme-icons-jetbrains/discussions/categories/custom-color-schemes) with the potential of having your color scheme added to the main `custom` plugin!
