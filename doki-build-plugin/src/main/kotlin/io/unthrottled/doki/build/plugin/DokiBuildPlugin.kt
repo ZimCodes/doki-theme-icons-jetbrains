@@ -76,6 +76,7 @@ class DokiBuildPlugin : Plugin<Project> {
     project.tasks.register<MultiExecTask>("genCustomIconTemplate") {
       description = "Generate icon templates for custom doki themes."
       mustRunAfter("buildPluginXml")
+      dependsOn("compileJava","compileKotlin","generateManifest")
       commandExecMap.put(MultiExecTask.OSType.AUTO, listOf("cd masterThemes", "yarn generateCustomIconsTemplate"))
     }
     val masterThemeDir = project.layout.projectDirectory.dir("masterThemes")

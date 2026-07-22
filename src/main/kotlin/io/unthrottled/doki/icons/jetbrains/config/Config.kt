@@ -5,7 +5,6 @@ import com.intellij.openapi.components.SerializablePersistentStateComponent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
-import io.unthrottled.doki.icons.jetbrains.themes.IconThemeManager
 
 @Service
 @State(

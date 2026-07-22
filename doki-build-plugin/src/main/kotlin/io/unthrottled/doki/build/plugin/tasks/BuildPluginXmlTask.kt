@@ -40,9 +40,11 @@ abstract class BuildPluginXmlTask : DefaultTask() {
   @TaskAction
   fun run() {
     val myIconType = iconType.get()
+    val pluginId = pluginId.get()
     val pluginXml: Node = parseXml(assetPluginXml.get().asFile.toPath())
-    applyPluginXmlId(pluginXml, myIconType)
-    applyPluginXmlName(pluginXml, myIconType)
+    applyId(pluginXml, myIconType,pluginId)
+    applyName(pluginXml, myIconType)
+    applyIncompatibleWith(pluginXml, myIconType, pluginId)
     writeXmlToFile(resourcePluginXml.get().asFile.toPath(), pluginXml)
   }
 
@@ -51,8 +53,8 @@ abstract class BuildPluginXmlTask : DefaultTask() {
     return idNodeList[0] as Node
   }
 
-  private fun applyPluginXmlId(pluginXml: Node, iconType: IconType) {
-    getNode(pluginXml, "id").setValue("${pluginId.get()}.${iconType.lowercase}")
+  private fun applyId(pluginXml: Node, iconType: IconType, pluginId: String) {
+    getNode(pluginXml, "id").setValue("${pluginId}.${iconType.lowercase}")
   }
 
   private fun getPluginName(iconType: IconType) = when (iconType) {
@@ -60,8 +62,16 @@ abstract class BuildPluginXmlTask : DefaultTask() {
     else -> " ${iconType.titlecase}"
   }
 
-  private fun applyPluginXmlName(pluginXml: Node, iconType: IconType) {
+  private fun applyName(pluginXml: Node, iconType: IconType) {
     getNode(pluginXml, "name").setValue("${pluginName.get()}${getPluginName(iconType)}")
+  }
+
+  private fun applyIncompatibleWith(pluginXml: Node, iconType: IconType,pluginId: String) {
+    IconType.entries
+      .filter { it != iconType }
+      .forEach { otherType ->
+        pluginXml.appendNode("incompatible-with", "$pluginId.${otherType.lowercase}")
+      }
   }
 
 }

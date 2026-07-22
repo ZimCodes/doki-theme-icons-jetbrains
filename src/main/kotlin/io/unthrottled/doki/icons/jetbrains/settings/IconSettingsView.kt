@@ -43,6 +43,7 @@ class IconSettingsView(private val model: IconSettingsModel = IconSettings.creat
         checkBox(PluginMessageBundle.message("settings.general.icons.ui")).bindSelected(model::isUIIcons)
       }
       row {
+        icon(DokiThemeIconz.CURLY_BRACES)
         checkBox(PluginMessageBundle.message("settings.general.icons.folders")).bindSelected(model::isNamedFolderIcons)
       }
       row {

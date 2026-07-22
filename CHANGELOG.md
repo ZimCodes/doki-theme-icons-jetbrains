@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Support for building custom icon color schemes
+
+### Changed
+- Change default for current theme away from Zero Two theme
+
+### Fixed
+- Fixed Icon settings page stuck in loading state
+- Fixed if icon settings page isn't fully initialize, actions in the settings page can still occur
+- Add missing icon for `Named Folders` in doki settings page
+
 ## [2.0.0] - 2026-07-20
 
 ### Added
@@ -37,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update gradle dependencies
+- Update Gradle dependencies
 - Update project dependecies
 - Update Gradle: `9.2.1` -> `9.4.1`
 

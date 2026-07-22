@@ -1,3 +1,4 @@
+import io.unthrottled.doki.build.plugin.IconType
 import org.jetbrains.changelog.date
 
 plugins {
@@ -99,5 +100,10 @@ tasks {
 
   patchPluginXml {
     dependsOn("buildThemes")
+  }
+
+  buildPlugin {
+    val variantName = findProperty("type") as? String ?: IconType.ORIGINAL.lowercase
+    archiveBaseName.set("doki-icons-$variantName")
   }
 }
