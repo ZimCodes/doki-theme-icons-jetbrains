@@ -68,7 +68,7 @@ class IconSettingsView(private val model: IconSettingsModel = IconSettings.creat
     return iconPanel
   }
 
-  override fun isModified(): Boolean = iconPanel.isModified()
+  override fun isModified(): Boolean = ::iconPanel.isInitialized && iconPanel.isModified()
 
   override fun apply() {
     iconPanel.apply()
@@ -76,7 +76,9 @@ class IconSettingsView(private val model: IconSettingsModel = IconSettings.creat
   }
 
   override fun reset() {
-    iconPanel.reset()
+    if (::iconPanel.isInitialized) {
+      iconPanel.reset()
+    }
   }
 
 }

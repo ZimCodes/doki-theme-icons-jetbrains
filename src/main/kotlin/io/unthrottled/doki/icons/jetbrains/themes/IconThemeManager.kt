@@ -54,7 +54,6 @@ interface ThemeManagerListener : EventListener {
 @Service
 class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Logging {
   companion object {
-    const val DEFAULT_THEME_ID = "13adffd9-acbe-47af-8101-fa71269a4c5c" // Zero Two Obsidian
     val TOPIC = Topic(ThemeManagerListener::class.java)
     fun getInstance(): IconThemeManager = ApplicationManager.getApplication().getService(IconThemeManager::class.java)
   }
@@ -64,8 +63,6 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
   private val themeMap: Map<String, DokiTheme>
 
   init {
-    connection.subscribe(LafManagerListener.TOPIC, this)
-    connection.subscribe(IconConfigListener.TOPIC, this)
     val currentVersion = DokiThemeIcons.getVersion().orElse("69")
     themeMap =
       AssetTools.readJsonFromResources<List<DokiThemeInformation>>(
@@ -82,10 +79,12 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
   }
 
   fun init() {
+    connection.subscribe(LafManagerListener.TOPIC, this)
+    connection.subscribe(IconConfigListener.TOPIC, this)
   }
 
   val defaultTheme: DokiTheme
-    get() = getThemeById(DEFAULT_THEME_ID).get()
+    get() = themeMap.asIterable().first().value
 
   val currentTheme: Optional<DokiThemePayload>
     get() = if (Config.getInstance().syncWithDokiTheme && PluginService.isDokiThemeInstalled()) {
@@ -111,7 +110,7 @@ class IconThemeManager : LafManagerListener, Disposable, IconConfigListener, Log
         }.or {
           val themeId = Config.getInstance().currentThemeId
           DokiThemePayload(
-            themeMap[themeId] ?: error("Expecting theme with ID $themeId to be present"),
+            themeMap[themeId] ?: defaultTheme,
             LafManager.getInstance().currentUIThemeLookAndFeel
               .toOptional()
               .map { uiTheme ->

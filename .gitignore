@@ -37,3 +37,4 @@ tmp
 iconSource/
 doki-build-source-jvm/
 doki-build-source/
+src/main/resources/META-INF/plugin.xml

@@ -6,11 +6,10 @@ import io.unthrottled.doki.icons.jetbrains.PluginMaster
 import io.unthrottled.doki.icons.jetbrains.integrations.PlatformHacker
 
 class ApplicationLifecycleListener : AppLifecycleListener, DumbAware {
-  companion object {
-    init {
-      PlatformHacker.toString()
-    }
+  override fun appFrameCreated(commandLineArgs: MutableList<String>) {
+    PlatformHacker.init()
   }
+
   override fun appClosing() {
     PluginMaster.getInstance().dispose()
   }

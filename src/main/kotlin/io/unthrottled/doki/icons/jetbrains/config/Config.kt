@@ -69,7 +69,7 @@ class Config : SerializablePersistentStateComponent<Config.StateConfig>(StateCon
     }
 
   data class StateConfig(
-    var currentThemeId: String = IconThemeManager.DEFAULT_THEME_ID,
+    var currentThemeId: String = "",
     var isUIIcons: Boolean = true,
     var isNamedFileIcons: Boolean = true,
     var isGlyphIcon: Boolean = true,

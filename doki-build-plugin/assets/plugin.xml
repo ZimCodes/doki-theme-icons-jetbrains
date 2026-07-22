@@ -1,6 +1,6 @@
 <idea-plugin require-restart="true">
   <id>io.unthrottled.doki.icons</id>
-  <name>Doki Theme Icons</name>
+  <name>Doki Icons</name>
   <vendor>Unthrottled</vendor>
 
   <idea-version since-build="251"/>
