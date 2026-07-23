@@ -15,7 +15,7 @@ ___
 
 Here are the steps for setting up your dev environment.
 
-**NOTE:** there are preset run configurations available.
+**NOTE:** There are preset run configurations available! See following image:
 ![Run Configuration location](./readmeAssets/contrib/run_location.jpg)
 
 ### Repo Dependencies
@@ -50,11 +50,11 @@ Use run configuration, `test plugin [<variant-name>]`.
 
 ### Build and Use Method
 
-This method involves building the plugin and installing it on your own IDE.
+This method involves building the plugin and installing it on your *own* IDE.
 
 1. Use run configuration, `create plugin [<variant-name>]`
 2. Navigate to `Settings > Plugins ⚙️ > Install plugin from disk.`
-3. Select `doki-theme-icons-jetbrains-<version>.zip` found in the `build/distributions` folder to install plugin.
+3. Select `doki-icons-<version>.zip` found in the `build/distributions` folder to install plugin.
 
 ---
 
